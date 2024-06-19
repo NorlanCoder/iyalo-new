@@ -5,6 +5,10 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
+use Dedoc\Scramble\Scramble;
+use Dedoc\Scramble\Support\Generator\OpenApi;
+use Dedoc\Scramble\Support\Generator\SecurityScheme;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +27,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Scramble::extendOpenApi(function (OpenApi $openApi) {
+            $openApi->secure(
+                SecurityScheme::http('bearer', 'JWT')
+            );
+        });
     }
 }
