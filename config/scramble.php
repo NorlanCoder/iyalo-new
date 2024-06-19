@@ -3,7 +3,6 @@
 use Dedoc\Scramble\Http\Middleware\RestrictedDocsAccess;
 
 return [
-
     /*
      * Your API path. By default, all routes starting with this path will be added to the docs.
      * If you need to change this behavior, you can add your custom routes resolver using `Scramble::routes()`.
@@ -16,22 +15,37 @@ return [
      */
     'api_domain' => null,
 
+    /*
+     * The path where your OpenAPI specification will be exported.
+     */
+    'export_path' => 'api.json',
+
     'info' => [
         /*
          * API version.
          */
-        'version' => env('API_VERSION', '1.0'),
+        'version' => env('API_VERSION', '0.0.1'),
 
         /*
          * Description rendered on the home page of the API documentation (`/docs/api`).
          */
-        'description' => 'Documentation pour IYALO',
+        'description' => 'Welcome to Projet IYALO',
     ],
 
     /*
      * Customize Stoplight Elements UI
      */
     'ui' => [
+        /*
+         * Define the title of the documentation's website. App name is used when this config is `null`.
+         */
+        'title' => null,
+
+        /*
+         * Define the theme of the documentation. Available options are `light` and `dark`.
+         */
+        'theme' => 'light',
+
         /*
          * Hide the `Try It` feature. Enabled by default.
          */
