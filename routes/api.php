@@ -2,11 +2,14 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\ProfilController;
+use App\Http\Controllers\Api\AuthController;
 
-use App\Http\Controllers\Announcer\PropertyController as PropertyControllerAnnouncer;
+use App\Http\Controllers\Api\Admin\CategoryController;
+use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\Admin\DetailController;
+
+use App\Http\Controllers\Announcer\PropertyController;
 use App\Http\Controllers\Announcer\WithdrawController;
 
 /*
@@ -44,18 +47,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['announcer'])->group(function () {
 
-        Route::get('announcer/property', [PropertyControllerAnnouncer::class, 'index'])->name('announcer.property');
-        Route::get('announcer/property/{property}/show', [PropertyControllerAnnouncer::class, 'show'])->name('announcer.property.show');
-        Route::get('announcer/property/{property}/action', [PropertyControllerAnnouncer::class, 'action'])->name('announcer.property.action');
-        Route::post('announcer/property/create', [PropertyControllerAnnouncer::class, 'create'])->name('announcer.property.create');
-        Route::put('announcer/property/{property}/update', [PropertyControllerAnnouncer::class, 'update'])->name('announcer.property.update');
+        Route::get('announcer/property', [PropertyController::class, 'index'])->name('announcer.property');
+        Route::get('announcer/property/{property}/show', [PropertyController::class, 'show'])->name('announcer.property.show');
+        Route::get('announcer/property/{property}/action', [PropertyController::class, 'action'])->name('announcer.property.action');
+        Route::post('announcer/property/create', [PropertyController::class, 'create'])->name('announcer.property.create');
+        Route::put('announcer/property/{property}/update', [PropertyController::class, 'update'])->name('announcer.property.update');
 
-        Route::get('announcer/property/{property}/calendar', [PropertyControllerAnnouncer::class, 'calendar'])->name('announcer.property.calendar');
-        Route::post('announcer/property/{property}/add_calendar', [PropertyControllerAnnouncer::class, 'add_calendar'])->name('announcer.property.add_calendar');
-        Route::put('announcer/property/{calendar}/update_calendar', [PropertyControllerAnnouncer::class, 'update_calendar'])->name('announcer.property.update_calendar');
+        Route::get('announcer/property/{property}/calendar', [PropertyController::class, 'calendar'])->name('announcer.property.calendar');
+        Route::post('announcer/property/{property}/add_calendar', [PropertyController::class, 'add_calendar'])->name('announcer.property.add_calendar');
+        Route::put('announcer/property/{calendar}/update_calendar', [PropertyController::class, 'update_calendar'])->name('announcer.property.update_calendar');
 
-        Route::get('announcer/property/{property}/visits', [PropertyControllerAnnouncer::class, 'visits'])->name('announcer.property.visits');
-        Route::put('announcer/property/{visit}/action_visit', [PropertyControllerAnnouncer::class, 'action_visit'])->name('announcer.property.action_visit');
+        Route::get('announcer/property/{property}/visits', [PropertyController::class, 'visits'])->name('announcer.property.visits');
+        Route::put('announcer/property/{visit}/action_visit', [PropertyController::class, 'action_visit'])->name('announcer.property.action_visit');
 
         // Withdraw
         Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
@@ -67,6 +70,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('add/category', [CategoryController::class,'addcategory'])->name('addcategory');
         Route::put('update/category/{id}', [CategoryController::class,'updatecategory'])->name('updatecategory');
         Route::get('delete/category/{id}', [CategoryController::class,'deletecategory'])->name('deletecategory');
+
+        // Usercontroller
+        Route::get('admin/', [UserController::class,'index'])->name('admin');
+        Route::post('admin/create', [UserController::class,'create'])->name('admin.create');
+        Route::put('admin/{user}/update', [UserController::class,'update'])->name('admin.update');
+        Route::get('admin/{user}/action', [UserController::class,'action'])->name('admin.action');
+        Route::get('admin/{user}/user_withdraw', [UserController::class,'user_withdraw'])->name('admin.user_withdraw');
+
+        // DetailController
+        Route::get('admin/properties', [DetailController::class,'properties'])->name('admin.properties');
+        Route::get('admin/categories', [DetailController::class,'categories'])->name('admin.categories');
+        Route::get('admin/withdraws', [DetailController::class,'withdraws'])->name('admin.withdraws');
+        Route::get('admin/{withdraw}/valide_withdrawal', [DetailController::class,'valide_withdrawal'])->name('admin.valide_withdrawal');
+
+
 
     });
 });
