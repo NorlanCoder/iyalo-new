@@ -201,20 +201,5 @@ class AuthController extends Controller
         }
     }
 
-    /**
-     * Logout
-     *
-     * @unauthenticated
-     * @return \Illuminate\Http\Response
-     * 
-     */
-    public function logout()
-    {
-        auth()->user()->tokens()->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Utilisateur déconnecté avec succès'       
-        ]);
-    }
+    
 }

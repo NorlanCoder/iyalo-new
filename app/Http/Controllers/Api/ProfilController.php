@@ -180,4 +180,21 @@ class ProfilController extends Controller
             'message' => 'Vous êtes maintenant un Annonceur',
         ], 200);
     }
+
+    /**
+     * Logout
+     *
+     * @unauthenticated
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Utilisateur déconnecté avec succès'       
+        ]);
+    }
 }

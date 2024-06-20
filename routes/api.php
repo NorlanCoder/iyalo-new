@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');
     Route::put('update_info', [ProfilController::class, 'update_info'])->name('update_info');
     Route::put('update_pass', [ProfilController::class, 'update_pass'])->name('update_pass');
+    Route::delete('logout', [ProfilController::class, 'logout'])->name('logout');
 
     Route::middleware(['visitor'])->group(function () {
         Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
