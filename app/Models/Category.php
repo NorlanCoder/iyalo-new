@@ -14,4 +14,9 @@ class Category extends Model
         'icon_name',
         'icon_source'
     ];
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
 }

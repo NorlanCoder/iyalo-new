@@ -24,7 +24,10 @@ Route::post('reset', [AuthController::class, 'reset'])->name('reset');
 
 // Category end-point
 Route::get('list/category', [CategoryController::class,'listcategory'])->name('listcategory');
-Route::get('list/category/property', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
+Route::get('list/category/property/{id}', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
+Route::post('add/category', [CategoryController::class,'addcategory'])->name('addcategory');
+Route::put('update/category/{id}', [CategoryController::class,'updatecategory'])->name('updatecategory');
+// Route::get('delete/category/{id}', [CategoryController::class,'deletecategory'])->name('deletecategory');
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
