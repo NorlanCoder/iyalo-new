@@ -25,6 +25,17 @@ class AdminSeeder extends Seeder
                 'created_at' => new \DateTime(),
                 'updated_at' => new \DateTime(),
             ],
+
+            [
+                'name' => "Pablo LOTO",
+                'phone' => "98456321",
+                'email' => "lotopoh@gmail.com",
+                'birthday' => "01-01-1995",
+                'role' => "announcer",
+                'password' => Hash::make('azertyui'),
+                'created_at' => new \DateTime(),
+                'updated_at' => new \DateTime(),
+            ],
         ]);
     }
 }

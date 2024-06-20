@@ -57,7 +57,7 @@ class PropertyController extends Controller
                 'label'  => 'required',
                 'category_id'  => 'required',
                 'price'  => 'required',
-                'frequency'  => 'required',
+                'frequency'  => '',
                 'city'  => 'required',
                 'country'  => 'required',
                 'district'  => 'required',
@@ -67,7 +67,7 @@ class PropertyController extends Controller
                 'room'  => 'required',
                 'bathroom'  => 'required',
                 'lounge'  => 'required',
-                'swingpool'  => 'required',
+                'swingpool'  => '',
                 'visite_price'  => 'required',
                 'conditions'  => 'required',
                 'device'  => 'required',
@@ -87,10 +87,9 @@ class PropertyController extends Controller
 
                 if($request->file('cover')){
                     $cover = $request->file('cover');
-                    $extension = $cover->getClientOriginalExtension();
                     $extension = $cover->getClientOriginalName();
                     $filename = time().'-'.$extension;
-                    $file->move('uploads', $filename);
+                    $cover->move('uploads', $filename);
                     $cover_url = 'uploads/'.$filename;
                 }
 
@@ -110,12 +109,12 @@ class PropertyController extends Controller
                     'bathroom'  => $request->bathroom,
                     'lounge'  => $request->lounge,
                     'swingpool'  => $request->swingpool,
-                    'status'  => $request->status,
                     'visite_price'  => $request->visite_price,
                     'conditions'  => $request->conditions,
                     'device'  => $request->device,
-                    'cover_url' =>$cover,
+                    'cover_url' =>$cover_url,
                 ]);
+
 
                 foreach ($request->file('images') as $file) {
                     $extension = $file->getClientOriginalName();
@@ -154,7 +153,7 @@ class PropertyController extends Controller
                 'label'  => 'required',
                 'category_id'  => 'required',
                 'price'  => 'required',
-                'frequency'  => 'required',
+                'frequency'  => '',
                 'city'  => 'required',
                 'country'  => 'required',
                 'district'  => 'required',
@@ -164,7 +163,7 @@ class PropertyController extends Controller
                 'room'  => 'required',
                 'bathroom'  => 'required',
                 'lounge'  => 'required',
-                'swingpool'  => 'required',
+                'swingpool'  => '',
                 'visite_price'  => 'required',
                 'conditions'  => 'required',
                 'device'  => 'required',
@@ -187,7 +186,7 @@ class PropertyController extends Controller
                     $extension = $cover->getClientOriginalExtension();
                     $extension = $cover->getClientOriginalName();
                     $filename = time().'-'.$extension;
-                    $file->move('uploads', $filename);
+                    $cover->move('uploads', $filename);
                     $cover_url = 'uploads/'.$filename;
                 }else 
                     $cover_url = $property->cover_url;
@@ -207,11 +206,10 @@ class PropertyController extends Controller
                     'bathroom'  => $request->bathroom,
                     'lounge'  => $request->lounge,
                     'swingpool'  => $request->swingpool,
-                    'status'  => $request->status,
                     'visite_price'  => $request->visite_price,
                     'conditions'  => $request->conditions,
                     'device'  => $request->device,
-                    'cover_url' =>$cover,
+                    'cover_url' =>$cover_url,
                 ]);
 
                 if($request->file('images')){
@@ -229,7 +227,6 @@ class PropertyController extends Controller
                         ]);
                     }
                 }
-
             DB::commit();
 
             return response()->json([

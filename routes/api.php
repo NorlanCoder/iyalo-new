@@ -42,11 +42,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['announcer'])->group(function () {
 
-        Route::get('announcer/', [PropertyControllerAnnouncer::class, 'index'])->name('announcer');
-        Route::get('announcer/{property}/show', [PropertyControllerAnnouncer::class, 'show'])->name('announcer.show');
-        Route::get('announcer/{property}/action', [PropertyControllerAnnouncer::class, 'action'])->name('announcer.action');
-        Route::post('announcer/create', [PropertyControllerAnnouncer::class, 'create'])->name('announcer.create');
-        Route::put('announcer/{property}/update', [PropertyControllerAnnouncer::class, 'update'])->name('announcer.update');
+        Route::get('announcer/property', [PropertyControllerAnnouncer::class, 'index'])->name('announcer.property');
+        Route::get('announcer/property/{property}/show', [PropertyControllerAnnouncer::class, 'show'])->name('announcer.property.show');
+        Route::get('announcer/property/{property}/action', [PropertyControllerAnnouncer::class, 'action'])->name('announcer.property.action');
+        Route::post('announcer/property/create', [PropertyControllerAnnouncer::class, 'create'])->name('announcer.property.create');
+        Route::put('announcer/property/{property}/update', [PropertyControllerAnnouncer::class, 'update'])->name('announcer.property.update');
 
     });
 
