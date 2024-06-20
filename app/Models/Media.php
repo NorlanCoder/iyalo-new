@@ -11,7 +11,13 @@ class Media extends Model
 
     protected $fillable = [
         'lib',
-        'media_url'
+        'media_url',
+        'property_id',
     ];
+
+    public function porperty()
+    {
+        return $this->belongsTo('App\Models\Porperty');
+    }
 
 }

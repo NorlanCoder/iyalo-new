@@ -28,6 +28,7 @@ class User extends Authenticatable
         'solde',
         'status',
         'role',
+        
         'adress',
         'card_image',
         'logo',

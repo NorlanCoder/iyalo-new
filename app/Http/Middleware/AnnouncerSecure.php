@@ -18,7 +18,7 @@ class AnnouncerSecure
     {
         if(Auth::user()->role == "visitor")
             return response()->json([
-                'errors' => "It's impossible! Go to your session Announcer"
+                'errors' => "It's impossible! Go to your session Visitor"
             ],401);
 
         return $next($request);
