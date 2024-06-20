@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\ProfilController;
+
 use App\Http\Controllers\Announcer\PropertyController as PropertyControllerAnnouncer;
+use App\Http\Controllers\Announcer\WithdrawController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +57,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('announcer/property/{property}/visits', [PropertyControllerAnnouncer::class, 'visits'])->name('announcer.property.visits');
         Route::put('announcer/property/{visit}/action_visit', [PropertyControllerAnnouncer::class, 'action_visit'])->name('announcer.property.action_visit');
 
+        // Withdraw
+        Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
+        Route::post('announcer/withdraw/create', [WithdrawController::class, 'create'])->name('announcer.withdraw.create');
     });
 
     Route::middleware(['admin'])->group(function () {
