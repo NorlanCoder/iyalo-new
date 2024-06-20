@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Visit;
+use App\Models\Calendar;
 use App\Models\Property;
 use App\Models\Media;
 
@@ -257,5 +259,130 @@ class PropertyController extends Controller
             'message' => 'Successfull',
         ], 200);
 
+    }
+
+    // Calendar
+     /**
+     * Add Calendar by Property
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function add_calendar(Request $request, Property $property){
+        try {
+            
+            $validation = Validator::make($request->all(), [
+                'day'  => 'required',
+                'hour'  => 'required'
+            ]);
+    
+            if ($validation->fails()) {
+                return response()->json([
+                    "message" => $validation->errors(),
+                    "status" => 400,
+                ], 400);
+            }
+
+            $calendar = Calendar::create([
+                'day'  => $request->day,
+                'property_id'  => $property->id,
+                'hour'  => $request->hour,
+            ]);
+
+            return response()->json([
+                "message" => 'Successfull',
+                "status" => 200,
+            ]);
+            
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    
+     /**
+     * Update Calendar by Property
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function update_calendar(Request $request,Category $category){
+        try {
+            
+            $validation = Validator::make($request->all(), [
+                'day'  => 'required',
+                'hour'  => 'required'
+            ]);
+    
+            if ($validation->fails()) {
+                return response()->json([
+                    "message" => $validation->errors(),
+                    "status" => 400,
+                ], 400);
+            }
+
+            $calendar->update([
+                'day'  => $request->day,
+                'hour'  => $request->hour,
+            ]);
+
+            return response()->json([
+                "message" => 'Successfull',
+                "status" => 200,
+            ]);
+            
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+     /**
+     * List Calendar by Property
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function calendar(Property $property){
+        
+        $calendars = Calendar::where('property_id',$property->id)->paginate(10);
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $calendars
+        ], 200);
+    }
+
+    // Visit
+    /**
+     * List Visit by Property
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function visits(Property $property){
+        
+        $visits = Visit::where('property_id',$property->id)->orderBy('created_at','desc')->paginate(10);
+        
+        return response()->json([
+            'status' => 200,
+            'data' => $visits
+        ]);
+    }
+
+    /**
+     * Mask visit by Property
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function action_visit(Visit $visit){
+        
+        $visit->update([
+            'visited'=> $visit->visited ? false : true,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success'
+        ]);
     }
 }

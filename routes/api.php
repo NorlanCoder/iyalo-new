@@ -48,6 +48,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('announcer/property/create', [PropertyControllerAnnouncer::class, 'create'])->name('announcer.property.create');
         Route::put('announcer/property/{property}/update', [PropertyControllerAnnouncer::class, 'update'])->name('announcer.property.update');
 
+        Route::get('announcer/property/{property}/calendar', [PropertyControllerAnnouncer::class, 'calendar'])->name('announcer.property.calendar');
+        Route::post('announcer/property/{property}/add_calendar', [PropertyControllerAnnouncer::class, 'add_calendar'])->name('announcer.property.add_calendar');
+        Route::put('announcer/property/{calendar}/update_calendar', [PropertyControllerAnnouncer::class, 'update_calendar'])->name('announcer.property.update_calendar');
+
+        Route::get('announcer/property/{property}/visits', [PropertyControllerAnnouncer::class, 'visits'])->name('announcer.property.visits');
+        Route::put('announcer/property/{visit}/action_visit', [PropertyControllerAnnouncer::class, 'action_visit'])->name('announcer.property.action_visit');
+
     });
 
     Route::middleware(['admin'])->group(function () {
