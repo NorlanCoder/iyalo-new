@@ -24,13 +24,6 @@ Route::post('forget', [AuthController::class, 'forget'])->name('forget');
 Route::post('validate_token', [AuthController::class, 'validate_token'])->name('validate_token');
 Route::post('reset', [AuthController::class, 'reset'])->name('reset');
 
-// Category end-point
-Route::get('list/category', [CategoryController::class,'listcategory'])->name('listcategory');
-Route::get('list/category/property/{id}', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
-Route::post('add/category', [CategoryController::class,'addcategory'])->name('addcategory');
-Route::put('update/category/{id}', [CategoryController::class,'updatecategory'])->name('updatecategory');
-Route::get('delete/category/{id}', [CategoryController::class,'deletecategory'])->name('deletecategory');
-
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');
@@ -50,6 +43,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('announcer/{property}/action', [PropertyControllerAnnouncer::class, 'action'])->name('announcer.action');
         Route::post('announcer/create', [PropertyControllerAnnouncer::class, 'create'])->name('announcer.create');
         Route::put('announcer/{property}/update', [PropertyControllerAnnouncer::class, 'update'])->name('announcer.update');
+
+    });
+
+    Route::middleware(['admin'])->group(function () {
+        // Category end-point
+        Route::get('list/category', [CategoryController::class,'listcategory'])->name('listcategory');
+        Route::get('list/category/property/{id}', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
+        Route::post('add/category', [CategoryController::class,'addcategory'])->name('addcategory');
+        Route::put('update/category/{id}', [CategoryController::class,'updatecategory'])->name('updatecategory');
+        Route::get('delete/category/{id}', [CategoryController::class,'deletecategory'])->name('deletecategory');
 
     });
 });

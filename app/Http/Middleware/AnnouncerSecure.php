@@ -16,10 +16,11 @@ class AnnouncerSecure
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::user()->role == "visitor")
+        if(in_array(Auth::user()->role,array("visitor","admin")))
             return response()->json([
-                'errors' => "It's impossible! Go to your session Visitor"
+                'errors' => "It's impossible! Go to your session"
             ],401);
+
 
         return $next($request);
     }

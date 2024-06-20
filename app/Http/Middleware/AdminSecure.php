@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class VisitorSecure
+class AdminSecure
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class VisitorSecure
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(in_array(Auth::user()->role,array("announcer","admin")))
+        if(in_array(Auth::user()->role,array("announcer","visitor")))
             return response()->json([
                 'errors' => "It's impossible! Go to your session"
             ],401);
