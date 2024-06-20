@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\DetailController;
+use App\Http\Controllers\Api\Admin\AnnonceController;
 
 use App\Http\Controllers\Announcer\PropertyController;
 use App\Http\Controllers\Announcer\WithdrawController;
@@ -83,6 +84,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('admin/categories', [DetailController::class,'categories'])->name('admin.categories');
         Route::get('admin/withdraws', [DetailController::class,'withdraws'])->name('admin.withdraws');
         Route::get('admin/{withdraw}/valide_withdrawal', [DetailController::class,'valide_withdrawal'])->name('admin.valide_withdrawal');
+
+        // AnnonceController
+        Route::get('admin/annonces', [AnnonceController::class,'index'])->name('admin.annonces');
+        Route::post('admin/annonces/create', [AnnonceController::class,'create'])->name('admin.annonces.create');
+        Route::put('admin/annonces/{annonce}/update', [AnnonceController::class,'update'])->name('admin.annonces.update');
+        Route::get('admin/annonces/{annonce}/action', [AnnonceController::class,'action'])->name('admin.annonces.action');
+        Route::delete('admin/annonces/{annonce}/destroy', [AnnonceController::class,'destroy'])->name('admin.annonces.destroy');
+
+
+
 
 
 
