@@ -10,7 +10,14 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    // Liste des catégories
+
+    /**
+     * All Category
+     *
+     * @unauthenticated
+     * @return \Illuminate\Http\Response
+     * 
+     */
     public function listcategory(Request $request) {
         try {
             $category = Category::all();
@@ -21,7 +28,13 @@ class CategoryController extends Controller
 
     }
 
-    // Liste des proriétés par catégorie
+    /**
+     * Porperty by Category
+     *
+     * @unauthenticated
+     * @return \Illuminate\Http\Response
+     * 
+     */
     public function listcategoryproperty(Request $request, $id) {
         try {
 
@@ -40,7 +53,12 @@ class CategoryController extends Controller
 
     }
 
-    // Ajouter une catégorie
+    /**
+     * Add Category
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
     public function addcategory(Request $request) {
         try {
 
@@ -76,7 +94,12 @@ class CategoryController extends Controller
 
     }
 
-    // Modifier catégorie
+    /**
+     * Update Category
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
     public function updatecategory(Request $request, $id) {
         try {
 
@@ -121,7 +144,12 @@ class CategoryController extends Controller
 
     }
 
-    // Modifier catégorie
+    /**
+     * Delete Category
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
     public function deletecategory(Request $request, $id) {
         try {
 

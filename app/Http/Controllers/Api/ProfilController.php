@@ -184,7 +184,6 @@ class ProfilController extends Controller
     /**
      * Logout
      *
-     * @unauthenticated
      * @return \Illuminate\Http\Response
      * 
      */
