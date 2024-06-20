@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfilController;
+use App\Http\Controllers\Announcer\PropertyController as PropertyControllerAnnouncer;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +24,23 @@ Route::post('validate_token', [AuthController::class, 'validate_token'])->name('
 Route::post('reset', [AuthController::class, 'reset'])->name('reset');
 
 Route::middleware(['auth:sanctum'])->group(function () {
+
+    Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');
+    Route::put('update_info', [ProfilController::class, 'update_info'])->name('update_info');
+    Route::put('update_pass', [ProfilController::class, 'update_pass'])->name('update_pass');
     
     Route::middleware(['visitor'])->group(function () {
-    
+        Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
+
     });
 
     Route::middleware(['announcer'])->group(function () {
-    
+
+        Route::get('announcer/', [PropertyControllerAnnouncer::class, 'index'])->name('announcer');
+        Route::get('announcer/{property}/show', [PropertyControllerAnnouncer::class, 'show'])->name('announcer.show');
+        Route::get('announcer/{property}/action', [PropertyControllerAnnouncer::class, 'action'])->name('announcer.action');
+        Route::post('announcer/create', [PropertyControllerAnnouncer::class, 'create'])->name('announcer.create');
+        Route::put('announcer/{property}/update', [PropertyControllerAnnouncer::class, 'update'])->name('announcer.update');
+        
     });
 });

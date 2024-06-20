@@ -55,7 +55,7 @@ class Kernel extends HttpKernel
     protected $middlewareAliases = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'visitor' => \App\Http\Middleware\VisitorSecure::class,
-        'announcer' => \App\Http\Middleware\AnnoncerSecure::class,
+        'announcer' => \App\Http\Middleware\AnnouncerSecure::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
