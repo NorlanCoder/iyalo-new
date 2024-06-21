@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProfilController;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\Visiteur\UserController as VisiteurController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\DetailController;
@@ -43,6 +43,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['visitor'])->group(function () {
         Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
+
+        // Favoris
+        Route::get('toggle/favoris/{iduser}/{idproperty}', [VisiteurController::class,'togglefavoris'])->name('togglefavoris');
+        Route::get('list/favoris/{id}', [VisiteurController::class,'listfavoris'])->name('listfavoris');
+
+        // Propriete
+        Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
+        Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
 
     });
 

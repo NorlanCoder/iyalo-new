@@ -28,7 +28,7 @@ class User extends Authenticatable
         'solde',
         'status',
         'role',
-        
+
         'adress',
         'card_image',
         'logo',
@@ -52,4 +52,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function favoriteProperties()
+    {
+        return $this->belongsToMany(Property::class, 'favories', 'user_id', 'property_id');
+    }
 }

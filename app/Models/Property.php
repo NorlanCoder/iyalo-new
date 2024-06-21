@@ -41,4 +41,9 @@ class Property extends Model
     {
         return $this->belongsTo('App\Models\Category');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'favories', 'property_id', 'user_id');
+    }
 }
