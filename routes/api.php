@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Admin\CategoryController;
 use App\Http\Controllers\Api\ProfilController;
 use App\Http\Controllers\Announcer\PropertyController as PropertyControllerAnnouncer;
+use App\Http\Controllers\Api\Visiteur\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::middleware(['visitor'])->group(function () {
         Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
+
+        // Favoris
+        Route::get('toggle/favoris/{iduser}/{idproperty}', [UserController::class,'togglefavoris'])->name('togglefavoris');
+        Route::get('list/favoris/{id}', [UserController::class,'listfavoris'])->name('listfavoris');
 
     });
 

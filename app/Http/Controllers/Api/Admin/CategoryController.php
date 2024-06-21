@@ -16,7 +16,7 @@ class CategoryController extends Controller
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function listcategory(Request $request) {
         try {
@@ -33,7 +33,7 @@ class CategoryController extends Controller
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function listcategoryproperty(Request $request, $id) {
         try {
@@ -47,8 +47,9 @@ class CategoryController extends Controller
                 $properties = $category->properties;
 
             return response()->json(['data' => $properties, 'statut' => 200], 200);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(["errors" => $e->getMessage(), "statut" => 500], 500);
         }
 
     }
@@ -57,7 +58,7 @@ class CategoryController extends Controller
      * Add Category
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function addcategory(Request $request) {
         try {
@@ -88,7 +89,6 @@ class CategoryController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-
             return response()->json(["errors" => $e->getMessage(), "statut" => 500], 500);
         }
 
@@ -98,7 +98,7 @@ class CategoryController extends Controller
      * Update Category
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function updatecategory(Request $request, $id) {
         try {
@@ -148,7 +148,7 @@ class CategoryController extends Controller
      * Delete Category
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function deletecategory(Request $request, $id) {
         try {

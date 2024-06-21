@@ -9,7 +9,7 @@ class Favory extends Model
 {
     use HasFactory;
 
-    
+
     protected $fillable = [
         'property_id',
         'user_id',
