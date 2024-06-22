@@ -27,6 +27,8 @@ class PropertyController extends Controller
 
         $properties = Property::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(10);
 
+        // return $properties[0]->media(4);
+
         return response()->json([
             'success' => true,
             'data' => $properties

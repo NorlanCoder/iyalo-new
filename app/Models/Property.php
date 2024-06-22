@@ -46,4 +46,14 @@ class Property extends Model
     {
         return $this->belongsToMany(User::class, 'favories', 'property_id', 'user_id');
     }
+
+    public function media($id)
+    {
+        $media = Media::where([
+            'property_id' => $id,
+            'lib' => 'properties'
+            ])->pluck('media_url');
+
+        return $media;
+    }
 }
