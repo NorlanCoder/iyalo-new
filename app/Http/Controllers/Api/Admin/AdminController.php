@@ -11,7 +11,7 @@ use App\Models\User;
 use App\Models\Withdraw;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class AdminController extends Controller
 {
     /**
      * Users
@@ -76,8 +76,8 @@ class UserController extends Controller
             ];
     
             return response()->json(['data' => $data], 200);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 

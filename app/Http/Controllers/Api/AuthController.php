@@ -58,8 +58,8 @@ class AuthController extends Controller
             ];
     
             return response()->json(['data' => $data], 200);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 
@@ -95,8 +95,8 @@ class AuthController extends Controller
                     "message" => "Mauvais Mail ou mot de passe",
                 ], 400);
             }
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 
@@ -132,8 +132,8 @@ class AuthController extends Controller
 
             return response()->json(["message" => 'Email is sending']);
 
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 
@@ -166,8 +166,8 @@ class AuthController extends Controller
 
             return response()->json(["message" => 'Successful']);
             
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 
@@ -196,8 +196,8 @@ class AuthController extends Controller
             
             $user->save();
 
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 

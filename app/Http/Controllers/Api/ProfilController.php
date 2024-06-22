@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Models\Property;
+
 
 class ProfilController extends Controller
 {
@@ -22,6 +24,52 @@ class ProfilController extends Controller
             'status' => 200,
             'data' => auth()->user(),
         ], 200);
+    }
+
+    /**
+     * My Info
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function all_properties(Request $request){
+
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'category_id' => 'required',
+                'room' => 'required',
+                'bathroom' => 'required',
+                'min_price' => 'required',
+                'max_price' => 'required',
+                'search' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+            }
+
+            $properties = Property::where([
+                'category_id' => $request->category_id,
+                'status' => true,
+                ])->where(DB::raw('lower(country)'),'like',['%'.mb_strtolower($request->search).'%'])
+                ->where(DB::raw('lower(city)'),'like',['%'.mb_strtolower($request->search).'%'])
+                ->where('room','>=',$request->room )
+                ->where('bathroom','>=',$request->bathroom )
+                ->whereBetween('price',[$request->min_price,$request->max_price])
+                ->orderBy('created_at','desc')
+            ->paginate(10);
+
+                
+            return response()->json([
+                'status' => 200,
+                'data' => $properties,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
+        }
+
     }
 
      

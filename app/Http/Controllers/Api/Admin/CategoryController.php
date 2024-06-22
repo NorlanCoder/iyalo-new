@@ -21,9 +21,9 @@ class CategoryController extends Controller
     public function listcategory(Request $request) {
         try {
             $category = Category::all();
-            return response()->json(['data' => $category, 'statut' => 200], 200);
-        } catch (\Throwable $th) {
-            throw $th;
+            return response()->json(['data' => $category, 'status' => 200], 200);
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
 
     }
@@ -41,15 +41,15 @@ class CategoryController extends Controller
             // Trouver la catégorie par son ID
                 $category = Category::find($id);
 
-                if(empty($category)) return response()->json(['data' => 'Cette categorie n\'existe pas', 'statut' => 404], 404);
+                if(empty($category)) return response()->json(['data' => 'Cette categorie n\'existe pas', 'status' => 404], 404);
 
             // Récupérer toutes les propriétés de cette catégorie
                 $properties = $category->properties;
 
-            return response()->json(['data' => $properties, 'statut' => 200], 200);
+            return response()->json(['data' => $properties, 'status' => 200], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(["errors" => $e->getMessage(), "statut" => 500], 500);
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
 
     }
@@ -69,7 +69,7 @@ class CategoryController extends Controller
             ]);
 
             if ($validation->fails()) {
-                return response()->json(["errors" => $validation->errors(), "statut" => 400], 400);
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
             DB::beginTransaction();
@@ -85,11 +85,11 @@ class CategoryController extends Controller
                 'categorie' => $categoory,
             ];
 
-            return response()->json(['data' => $data, 'statut' => 201], 201);
+            return response()->json(['data' => $data, 'status' => 201], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(["errors" => $e->getMessage(), "statut" => 500], 500);
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
 
     }
@@ -109,7 +109,7 @@ class CategoryController extends Controller
             ]);
 
             if ($validation->fails()) {
-                return response()->json(["errors" => $validation->errors(), "statut" => 400], 400);
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
             // Trouver la catégorie par son ID
@@ -117,7 +117,7 @@ class CategoryController extends Controller
 
 
             if (!$category) {
-                return response()->json(["errors" => "Catégorie non trouvée", "statut" => 404], 404);
+                return response()->json(["errors" => "Catégorie non trouvée", "status" => 404], 404);
             }
 
             DB::beginTransaction();
@@ -134,12 +134,12 @@ class CategoryController extends Controller
                 'categorie' => $category,
             ];
 
-            return response()->json(['data' => $data, 'statut' => 201], 201);
+            return response()->json(['data' => $data, 'status' => 201], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return response()->json(["errors" => $e->getMessage(), "statut" => 500], 500);
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
 
     }
@@ -158,7 +158,7 @@ class CategoryController extends Controller
 
 
             if (!$category) {
-                return response()->json(["errors" => "Catégorie non trouvée", "statut" => 404], 404);
+                return response()->json(["errors" => "Catégorie non trouvée", "status" => 404], 404);
             }
 
             DB::beginTransaction();
@@ -171,12 +171,12 @@ class CategoryController extends Controller
                 'message' => "Catégorie supprimé avec succès",
             ];
 
-            return response()->json(['data' => $data, 'statut' => 200], 200);
+            return response()->json(['data' => $data, 'status' => 200], 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
 
-            return response()->json(["errors" => $e->getMessage(), "statut" => 500], 500);
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
 
     }

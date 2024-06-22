@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\ProfilController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Visiteur\UserController as VisiteurController;
 use App\Http\Controllers\Api\Admin\CategoryController;
-use App\Http\Controllers\Api\Admin\UserController;
+use App\Http\Controllers\Api\Admin\AdminController;
 use App\Http\Controllers\Api\Admin\DetailController;
 use App\Http\Controllers\Api\Admin\AnnonceController;
 
@@ -41,6 +41,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('update_pass', [ProfilController::class, 'update_pass'])->name('update_pass');
     Route::delete('logout', [ProfilController::class, 'logout'])->name('logout');
 
+    Route::get('properties', [ProfilController::class, 'all_properties'])->name('all_properties');
+
     Route::middleware(['visitor'])->group(function () {
         Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
 
@@ -51,6 +53,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Propriete
         Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
         Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
+
+        Route::post('visit/{property}/askvisit',[VisiteurController::class,'askvisit'])->name('askvisit');
+        Route::get('note/{property}',[VisiteurController::class,'note'])->name('note');
+
+        Route::post('visit/fedapay',[VisiteurController::class,'askvisit_webhook'])->name('askvisit_webhook');
+
 
     });
 
@@ -69,6 +77,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('announcer/property/{property}/visits', [PropertyController::class, 'visits'])->name('announcer.property.visits');
         Route::put('announcer/property/{visit}/action_visit', [PropertyController::class, 'action_visit'])->name('announcer.property.action_visit');
 
+        Route::get('announcer/property/{property}/notes', [PropertyController::class, 'notes'])->name('announcer.property.notes');
+
+
         // Withdraw
         Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
         Route::post('announcer/withdraw/create', [WithdrawController::class, 'create'])->name('announcer.withdraw.create');
@@ -80,12 +91,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('update/category/{id}', [CategoryController::class,'updatecategory'])->name('updatecategory');
         Route::get('delete/category/{id}', [CategoryController::class,'deletecategory'])->name('deletecategory');
 
-        // Usercontroller
-        Route::get('admin/', [UserController::class,'index'])->name('admin');
-        Route::post('admin/create', [UserController::class,'create'])->name('admin.create');
-        Route::put('admin/{user}/update', [UserController::class,'update'])->name('admin.update');
-        Route::get('admin/{user}/action', [UserController::class,'action'])->name('admin.action');
-        Route::get('admin/{user}/user_withdraw', [UserController::class,'user_withdraw'])->name('admin.user_withdraw');
+        // AdminController
+        Route::get('admin/', [AdminController::class,'index'])->name('admin');
+        Route::post('admin/create', [AdminController::class,'create'])->name('admin.create');
+        Route::put('admin/{user}/update', [AdminController::class,'update'])->name('admin.update');
+        Route::get('admin/{user}/action', [AdminController::class,'action'])->name('admin.action');
+        Route::get('admin/{user}/user_withdraw', [AdminController::class,'user_withdraw'])->name('admin.user_withdraw');
 
         // DetailController
         Route::get('admin/properties', [DetailController::class,'properties'])->name('admin.properties');

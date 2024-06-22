@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Note;
 use App\Models\Visit;
 use App\Models\Calendar;
 use App\Models\Property;
@@ -137,8 +138,8 @@ class PropertyController extends Controller
                 "status" => 200,
             ]);
 
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     
     }
@@ -236,8 +237,8 @@ class PropertyController extends Controller
                 "status" => 200,
             ]);
 
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     
     }
@@ -294,8 +295,8 @@ class PropertyController extends Controller
                 "status" => 200,
             ]);
             
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
     
@@ -330,8 +331,8 @@ class PropertyController extends Controller
                 "status" => 200,
             ]);
             
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 
@@ -349,6 +350,22 @@ class PropertyController extends Controller
             'message' => 'Success',
             'data' => $calendars
         ], 200);
+    }
+
+    /**
+     * List Note by Property
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function notes(Property $property){
+        
+        $notes = Note::where('property_id',$property->id)->orderBy('created_at','desc')->paginate(10);
+        
+        return response()->json([
+            'status' => 200,
+            'data' => $notes
+        ]);
     }
 
     // Visit
@@ -385,4 +402,5 @@ class PropertyController extends Controller
             'message' => 'Success'
         ]);
     }
+
 }

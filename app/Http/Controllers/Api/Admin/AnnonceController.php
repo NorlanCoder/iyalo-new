@@ -45,7 +45,7 @@ class AnnonceController extends Controller
             ]);
 
             if ($validation->fails()) {
-                return response()->json(["errors" => $validation->errors(), "statut" => 400], 400);
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
             DB::beginTransaction();
@@ -71,8 +71,8 @@ class AnnonceController extends Controller
                 "status" => 200,
             ]);
 
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 
@@ -93,7 +93,7 @@ class AnnonceController extends Controller
             ]);
 
             if ($validation->fails()) {
-                return response()->json(["errors" => $validation->errors(), "statut" => 400], 400);
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
             DB::beginTransaction();
@@ -120,8 +120,8 @@ class AnnonceController extends Controller
                 "status" => 200,
             ]);
 
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
 

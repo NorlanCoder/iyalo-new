@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->date('date_visite');
+            $table->timestamp('date_visite');
             $table->boolean('visited')->default(false);
 
             $table->bigInteger('user_id')->unsigned();            
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->float('amount');
             $table->string('type');
             $table->string('reference');
-            $table->json('transaction');
+            $table->json('transaction')->nullable();
             $table->timestamps();
         });
     }
