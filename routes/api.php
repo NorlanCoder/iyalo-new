@@ -34,15 +34,16 @@ Route::post('reset', [AuthController::class, 'reset'])->name('reset');
 Route::get('list/category', [CategoryController::class,'listcategory'])->name('listcategory');
 Route::get('list/category/property/{id}', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
 
+Route::get('properties', [ProfilController::class, 'all_properties'])->name('all_properties');
+Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
+Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');
     Route::put('update_info', [ProfilController::class, 'update_info'])->name('update_info');
     Route::put('update_pass', [ProfilController::class, 'update_pass'])->name('update_pass');
     Route::delete('logout', [ProfilController::class, 'logout'])->name('logout');
-
-    Route::get('properties', [ProfilController::class, 'all_properties'])->name('all_properties');
-
+    
     Route::middleware(['visitor'])->group(function () {
         Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
 
@@ -51,9 +52,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('list/favoris/{id}', [VisiteurController::class,'listfavoris'])->name('listfavoris');
 
         // Propriete
-        Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
-        Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
-
         Route::post('visit/{property}/askvisit',[VisiteurController::class,'askvisit'])->name('askvisit');
         Route::get('note/{property}',[VisiteurController::class,'note'])->name('note');
 

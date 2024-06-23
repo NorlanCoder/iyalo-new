@@ -79,6 +79,8 @@ class UserController extends Controller
     /**
      * List last 10 properties
      *
+     * @unauthenticated
+     * 
      * @return \Illuminate\Http\Response
      * 
      */
@@ -95,16 +97,19 @@ class UserController extends Controller
     /**
      * Détails property
      *
+     * @unauthenticated
+     * 
      * @return \Illuminate\Http\Response
      * 
      */
     public function detailsproperties(Request $request, $id) {
         try {
-            $properties = Property::find($id);
+            $property = Property::find($id);
 
-            if(empty($properties)) return response()->json(['message' => 'Cette propriété n\'existe pas', 'status' => 404], 404);
-
-            return response()->json(['data' => $properties, 'status' => 200], 200);
+            if(empty($property)) return response()->json(['message' => 'Cette propriété n\'existe pas', 'status' => 404], 404);
+            $property['media'] = $property->media($id);
+            // $property = array_merge($property,)
+            return response()->json(['data' => $property, 'status' => 200], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);

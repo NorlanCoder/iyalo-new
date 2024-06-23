@@ -17,6 +17,8 @@ class AuthController extends Controller
     /**
      * Register Mobile
      * 
+     * @unauthenticated
+     * 
      * Handles the register request and return token.
      *
      */
@@ -28,7 +30,7 @@ class AuthController extends Controller
                 'name' => 'required',
                 'email' => 'required|unique:users',
                 'phone' => 'required|unique:users',
-                'birthday' => 'required',
+                // 'birthday' => 'required',
                 'password' => 'required|min:8',
                 'confirm' => 'required|min:8|same:password'
             ]);

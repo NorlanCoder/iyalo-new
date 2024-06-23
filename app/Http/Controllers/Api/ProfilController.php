@@ -27,8 +27,10 @@ class ProfilController extends Controller
     }
 
     /**
-     * My Info
+     * All Properties
      *
+     * @unauthenticated
+     * 
      * @return \Illuminate\Http\Response
      * 
      */
@@ -37,28 +39,30 @@ class ProfilController extends Controller
         try {
 
             $validation = Validator::make($request->all(), [
-                'category_id' => 'required',
-                'room' => 'required',
-                'bathroom' => 'required',
-                'min_price' => 'required',
-                'max_price' => 'required',
-                'search' => 'required',
+                'category_id' => '',
+                'room' => '',
+                'bathroom' => '',
+                'min_price' => '',
+                'max_price' => '',
+                'search' => '',
             ]);
 
             if ($validation->fails()) {
                 return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
-            $properties = Property::where([
-                'category_id' => $request->category_id,
-                'status' => true,
-                ])->where(DB::raw('lower(country)'),'like',['%'.mb_strtolower($request->search).'%'])
+            $properties = Property::where('status',true)
+                ->where(DB::raw('lower(country)'),'like',['%'.mb_strtolower($request->search).'%'])
                 ->where(DB::raw('lower(city)'),'like',['%'.mb_strtolower($request->search).'%'])
-                ->where('room','>=',$request->room )
-                ->where('bathroom','>=',$request->bathroom )
-                ->whereBetween('price',[$request->min_price,$request->max_price])
-                ->orderBy('created_at','desc')
-            ->paginate(10);
+                ->where('room','>=',$request->room ?: 0 )
+                ->where('bathroom','>=',$request->bathroom ?: 0)
+                ->whereBetween('price',[$request->min_price ?: 0,$request->max_price ?: 999999999]);
+                
+            if($request->category_id)
+                $properties = $properties->where('category_id',$request->category_id)->orderBy('created_at','desc')->paginate(10);
+            else 
+                $properties = $properties->orderBy('created_at','desc')->paginate(10);
+    
 
                 
             return response()->json([

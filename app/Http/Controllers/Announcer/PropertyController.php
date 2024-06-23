@@ -52,6 +52,8 @@ class PropertyController extends Controller
     /**
      * Add Property
      *
+     * @requestMediaType multipart/form-data
+     * 
      * @return \Illuminate\Http\Response
      * 
      */

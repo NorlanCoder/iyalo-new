@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('image_url')->nullable();
-            $table->date('birthday');
+            $table->date('birthday')->nullable();
             $table->string('token_notify')->default('');
             $table->integer('solde')->default(0);
             $table->timestamp('email_verified_at')->nullable();
