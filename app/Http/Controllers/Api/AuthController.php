@@ -198,6 +198,8 @@ class AuthController extends Controller
             
             $user->save();
 
+            return response()->json(["message" => 'Successful', "status" => 200]);
+
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
