@@ -45,7 +45,7 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'birthday' => $request->birthday,
+                // 'birthday' => $request->birthday,
                 'token_notify' => random_int(100000, 999999),
                 'password' => Hash::make($request->password),
             ]);

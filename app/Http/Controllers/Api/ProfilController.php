@@ -89,7 +89,7 @@ class ProfilController extends Controller
             'name' => 'required',
             'email' => 'required',
             'phone' => 'required',
-            'birthday' => 'required',
+            'birthday' => '',
         ]);
 
         if(auth()->user()->phone != $request->phone){
@@ -119,7 +119,7 @@ class ProfilController extends Controller
 
         $validation = Validator::make($request->all(), [
             'name' => 'required',
-            'birthday' => 'required',
+            'birthday' => '',
         ]);
         if ($validation->fails()) {
             return response()->json([
