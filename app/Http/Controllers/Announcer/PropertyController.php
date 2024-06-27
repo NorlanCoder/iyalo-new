@@ -42,7 +42,8 @@ class PropertyController extends Controller
      * 
      */
     public function show(Property $property){
-        
+
+        $property['media'] = $property->media($property->id);
         return response()->json([
             'message' => 'Success',
             'data' => $property
@@ -51,8 +52,6 @@ class PropertyController extends Controller
 
     /**
      * Add Property
-     *
-     * @requestMediaType multipart/form-data
      * 
      * @return \Illuminate\Http\Response
      * 
