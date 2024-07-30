@@ -12,7 +12,7 @@ class CategoryController extends Controller
 {
 
     /**
-     * All Category
+     * All Category 
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
@@ -55,7 +55,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Add Category
+     * Add Category of Admin
      *
      * @return \Illuminate\Http\Response
      *
@@ -95,7 +95,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Update Category
+     * Update Category of Admin
      *
      * @return \Illuminate\Http\Response
      *
@@ -145,7 +145,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Delete Category
+     * Delete Category of Admin
      *
      * @return \Illuminate\Http\Response
      *

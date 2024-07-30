@@ -15,7 +15,7 @@ class AnnonceController extends Controller
 {
 
     /**
-     * List Annonce
+     * List Annonce of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -30,7 +30,7 @@ class AnnonceController extends Controller
     }
 
     /**
-     * Add  Annonce
+     * Add  Annonce of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -78,7 +78,7 @@ class AnnonceController extends Controller
 
 
     /**
-     * Update  Annonce
+     * Update  Annonce of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -126,7 +126,7 @@ class AnnonceController extends Controller
     }
 
     /**
-     * Active/Disactive  Annonce
+     * Active/Disactive  Annonce of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -144,7 +144,7 @@ class AnnonceController extends Controller
     }
 
     /**
-     * Delete  Annonce
+     * Delete  Annonce of Admin
      *
      * @return \Illuminate\Http\Response
      * 

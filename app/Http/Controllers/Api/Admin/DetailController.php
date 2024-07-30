@@ -17,7 +17,7 @@ class DetailController extends Controller
     /**
      * Property
      *
-     * All Properties
+     * All Properties of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -34,7 +34,7 @@ class DetailController extends Controller
 
 
     /**
-     * Categories
+     * Categories of Admin
      *
      * All Properties
      *
@@ -54,7 +54,7 @@ class DetailController extends Controller
     /**
      * Withdraws
      *
-     * All Withdraws
+     * All Withdraws of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -70,7 +70,7 @@ class DetailController extends Controller
     }
 
     /**
-     * Activate Withdraw
+     * Activate Withdraw of Admin
      *
      * Validation Withdraw of User
      *

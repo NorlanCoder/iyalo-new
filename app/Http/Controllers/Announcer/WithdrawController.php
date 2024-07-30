@@ -15,7 +15,7 @@ class WithdrawController extends Controller
 {
 
     /**
-     * History Withdraw
+     * History Withdraw of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -32,7 +32,7 @@ class WithdrawController extends Controller
 
 
     /**
-     * Make Withdraw
+     * Make Withdraw of Announcer
      *
      * @return \Illuminate\Http\Response
      * 

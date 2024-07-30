@@ -51,7 +51,7 @@ class PropertyController extends Controller
     }
 
     /**
-     * Add Property
+     * Add Property of Announcer
      * 
      * @return \Illuminate\Http\Response
      * 
@@ -148,7 +148,7 @@ class PropertyController extends Controller
     }
 
     /**
-     * Update Property
+     * Update Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -247,7 +247,7 @@ class PropertyController extends Controller
     }
 
     /**
-     * Active/Disactive  Property
+     * Active/Disactive Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -267,7 +267,7 @@ class PropertyController extends Controller
 
     // Calendar
      /**
-     * Add Calendar by Property
+     * Add Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -304,7 +304,7 @@ class PropertyController extends Controller
     }
     
      /**
-     * Update Calendar by Property
+     * Update Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -340,7 +340,7 @@ class PropertyController extends Controller
     }
 
      /**
-     * List Calendar by Property
+     * List Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -356,7 +356,7 @@ class PropertyController extends Controller
     }
 
     /**
-     * List Note by Property
+     * List Note by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -373,7 +373,7 @@ class PropertyController extends Controller
 
     // Visit
     /**
-     * List Visit by Property
+     * List Visit by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
@@ -389,7 +389,7 @@ class PropertyController extends Controller
     }
 
     /**
-     * Mask visit by Property
+     * Mask visit by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 

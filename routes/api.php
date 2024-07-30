@@ -57,7 +57,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::post('visit/fedapay',[VisiteurController::class,'askvisit_webhook'])->name('askvisit_webhook');
 
-
     });
 
     Route::middleware(['announcer'])->group(function () {

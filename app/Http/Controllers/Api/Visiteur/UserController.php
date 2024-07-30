@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     //Favoris
     /**
-     * List User Favoris
+     * List User Favoris of User
      *
      * @return \Illuminate\Http\Response
      * 
@@ -38,7 +38,7 @@ class UserController extends Controller
     }
 
     /**
-     * Add / Delete Favories
+     * Add / Delete Favories of User
      *
      * @return \Illuminate\Http\Response
      * 
@@ -76,8 +76,59 @@ class UserController extends Controller
         }
     }
 
+    
     /**
-     * List last 10 properties
+     * All Properties of User
+     *
+     * @unauthenticated
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function all_properties(Request $request){
+
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'category_id' => '',
+                'room' => '',
+                'bathroom' => '',
+                'min_price' => '',
+                'max_price' => '',
+                'search' => '',
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+            }
+
+            $properties = Property::where('status',true)
+                ->where(DB::raw('lower(country)'),'like',['%'.mb_strtolower($request->search).'%'])
+                ->where(DB::raw('lower(city)'),'like',['%'.mb_strtolower($request->search).'%'])
+                ->where('room','>=',$request->room ?: 0 )
+                ->where('bathroom','>=',$request->bathroom ?: 0)
+                ->whereBetween('price',[$request->min_price ?: 0,$request->max_price ?: 999999999]);
+                
+            if($request->category_id)
+                $properties = $properties->where('category_id',$request->category_id)->orderBy('created_at','desc')->paginate(10);
+            else 
+                $properties = $properties->orderBy('created_at','desc')->paginate(10);
+    
+
+                
+            return response()->json([
+                'status' => 200,
+                'data' => $properties,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
+        }
+
+    }
+
+    /**
+     * List last 10 properties of User
      *
      * @unauthenticated
      * 
@@ -95,7 +146,7 @@ class UserController extends Controller
     }
 
     /**
-     * Détails property
+     * Détails property of User
      *
      * @unauthenticated
      * 
@@ -117,7 +168,7 @@ class UserController extends Controller
     }
 
     /**
-     * Ask visit
+     * Ask visit of User
      *
      * @return \Illuminate\Http\Response
      * 
@@ -157,7 +208,7 @@ class UserController extends Controller
     }
     
     /**
-     * Fedapay Webhook Visit
+     * Fedapay Webhook Visit of User
      * 
      * Fedapay Webhook for asking visit
      *
@@ -221,7 +272,7 @@ class UserController extends Controller
     }
 
     /**
-     * Leave a note
+     * Leave a note of User
      *
      * @return \Illuminate\Http\Response
      * 

@@ -16,7 +16,7 @@ class AdminController extends Controller
     /**
      * Users
      *
-     * All Users
+     * All Users of Admin
      *
      * @return \Illuminate\Http\Response
      * 
@@ -33,7 +33,7 @@ class AdminController extends Controller
 
 
     /**
-     * Add Admin
+     * Add Admin of Admin
      *
      * Add only Admin
      *
@@ -82,7 +82,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Update Admin
+     * Update Admin of Admin
      *
      * Update only Admin
      *
@@ -149,7 +149,7 @@ class AdminController extends Controller
 
     
     /**
-     * Active/Disactive User
+     * Active/Disactive User of Admin
      *
      * Active/Disactive User
      *
@@ -169,7 +169,7 @@ class AdminController extends Controller
     }
 
     /**
-     * List Withdraw
+     * List Withdraw of Admin
      *
      * History of Withdrawal
      *

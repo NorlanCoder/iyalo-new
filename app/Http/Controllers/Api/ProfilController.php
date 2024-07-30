@@ -25,57 +25,6 @@ class ProfilController extends Controller
             'data' => auth()->user(),
         ], 200);
     }
-
-    /**
-     * All Properties
-     *
-     * @unauthenticated
-     * 
-     * @return \Illuminate\Http\Response
-     * 
-     */
-    public function all_properties(Request $request){
-
-        try {
-
-            $validation = Validator::make($request->all(), [
-                'category_id' => '',
-                'room' => '',
-                'bathroom' => '',
-                'min_price' => '',
-                'max_price' => '',
-                'search' => '',
-            ]);
-
-            if ($validation->fails()) {
-                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
-            }
-
-            $properties = Property::where('status',true)
-                ->where(DB::raw('lower(country)'),'like',['%'.mb_strtolower($request->search).'%'])
-                ->where(DB::raw('lower(city)'),'like',['%'.mb_strtolower($request->search).'%'])
-                ->where('room','>=',$request->room ?: 0 )
-                ->where('bathroom','>=',$request->bathroom ?: 0)
-                ->whereBetween('price',[$request->min_price ?: 0,$request->max_price ?: 999999999]);
-                
-            if($request->category_id)
-                $properties = $properties->where('category_id',$request->category_id)->orderBy('created_at','desc')->paginate(10);
-            else 
-                $properties = $properties->orderBy('created_at','desc')->paginate(10);
-    
-
-                
-            return response()->json([
-                'status' => 200,
-                'data' => $properties,
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
-        }
-
-    }
-
      
     /**
      * Update Info
