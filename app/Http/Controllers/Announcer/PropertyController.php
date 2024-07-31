@@ -81,6 +81,11 @@ class PropertyController extends Controller
                 'cover'  => 'required|max:10000',
                 'images'  => 'required|max:10000',
             ]);
+
+            return response()->json([
+                "message" => $request,
+                "status" => 200,
+            ]);
     
             if ($validation->fails()) {
                 return response()->json([
