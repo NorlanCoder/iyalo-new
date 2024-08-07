@@ -79,13 +79,9 @@ class PropertyController extends Controller
                 'device'  => 'required',
 
                 'cover'  => 'required|max:10000',
-                'images'  => 'required|max:10000',
+                'images.*' => 'required|file|mimes:jpeg,png,jpg,gif|max:10000',
             ]);
 
-            return response()->json([
-                "message" => $request,
-                "status" => 200,
-            ]);
     
             if ($validation->fails()) {
                 return response()->json([
@@ -96,8 +92,8 @@ class PropertyController extends Controller
 
             DB::beginTransaction();
 
-                if($request->file('cover')){
-                    $cover = $request->file('cover');
+                if($request->cover){
+                    $cover = $request->cover;
                     $extension = $cover->getClientOriginalName();
                     $filename = time().'-'.$extension;
                     $cover->move('uploads', $filename);
@@ -127,7 +123,7 @@ class PropertyController extends Controller
                 ]);
 
 
-                foreach ($request->file('images') as $file) {
+                foreach ($request->images as $file) {
                     $extension = $file->getClientOriginalName();
                     $filename = time().'-'.$extension;
                     $file->move('uploads', $filename);
