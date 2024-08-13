@@ -34,6 +34,8 @@ class PropertyController extends Controller
         // });
         $properties->map(function ($query) {
             $query->media = $query->media($query->id);
+            $query->user;
+            $query->note = Note::where('property_id', $query->id)->get();
             return $query;
         });
 
@@ -184,7 +186,8 @@ class PropertyController extends Controller
                 'device'  => 'required',
 
                 'cover'  => 'max:10000',
-                'images'  => 'max:10000',
+                'images.*' => 'max:10000',
+
             ]);
     
             if ($validation->fails()) {
@@ -196,8 +199,8 @@ class PropertyController extends Controller
 
             DB::beginTransaction();
 
-                if($request->file('cover')){
-                    $cover = $request->file('cover');
+                if($request->hasFile('cover')){
+                    $cover = $request->cover;
                     $extension = $cover->getClientOriginalExtension();
                     $extension = $cover->getClientOriginalName();
                     $filename = time().'-'.$extension;
@@ -227,14 +230,18 @@ class PropertyController extends Controller
                     'cover_url' =>$cover_url,
                 ]);
 
-                if($request->file('images')){
+                if($request->images){
                     $delete = Media::where('property_id',$property->id)->delete();
-                    foreach ($request->file('images') as $file) {
-                        $extension = $file->getClientOriginalName();
-                        $filename = time().'-'.$extension;
-                        $file->move('uploads', $filename);
-                        $images = 'uploads/'.$filename;
-
+                    foreach ($request->images as $file) {
+                        if($file->isvalid()){
+                            $extension = $file->getClientOriginalName();
+                            $filename = time().'-'.$extension;
+                            $file->move('uploads', $filename);
+                            $images = 'uploads/'.$filename;
+                        }
+                        else{
+                            $images = $file;
+                        }
                         $media = Media::create([
                             'lib' => 'properties',
                             'media_url' => $images,
