@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Visit;
@@ -53,7 +54,7 @@ class PropertyController extends Controller
     /**
      * Add Property of Announcer
      * 
-     * @return \Illuminate\Http\Response
+     * @tags Request
      * 
      */
     public function create(Request $request){
@@ -82,8 +83,10 @@ class PropertyController extends Controller
                 'images'  => 'required|max:10000',
             ]);
 
+            Log::info($request->label);
+
             return response()->json([
-                "message" => $request,
+                "message" => $request->label,
                 "status" => 200,
             ]);
     
