@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Note;
 use App\Models\Visit;
@@ -26,9 +25,19 @@ class PropertyController extends Controller
      */
     public function index(){
 
-        $properties = Property::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(10);
-
+        $properties = Property::where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')
+        ->paginate(10);
         // return $properties[0]->media(4);
+        // $properties->each(function ($query) {
+        //     $query['media'] = $query->media($query->id);
+        //     return $query;
+        // });
+        $properties->map(function ($query) {
+            $query->media = $query->media($query->id);
+            $query->user;
+            $query->note = Note::where('property_id', $query->id)->get();
+            return $query;
+        });
 
         return response()->json([
             'success' => true,
@@ -54,7 +63,7 @@ class PropertyController extends Controller
     /**
      * Add Property of Announcer
      * 
-     * @tags Request
+     * @return \Illuminate\Http\Response
      * 
      */
     public function create(Request $request){
@@ -80,15 +89,9 @@ class PropertyController extends Controller
                 'device'  => 'required',
 
                 'cover'  => 'required|max:10000',
-                'images'  => 'required|max:10000',
+                'images.*' => 'required|file|mimes:jpeg,png,jpg,gif|max:10000',
             ]);
 
-            Log::info($request->label);
-
-            return response()->json([
-                "message" => $request->label,
-                "status" => 200,
-            ]);
     
             if ($validation->fails()) {
                 return response()->json([
@@ -99,8 +102,8 @@ class PropertyController extends Controller
 
             DB::beginTransaction();
 
-                if($request->file('cover')){
-                    $cover = $request->file('cover');
+                if($request->cover){
+                    $cover = $request->cover;
                     $extension = $cover->getClientOriginalName();
                     $filename = time().'-'.$extension;
                     $cover->move('uploads', $filename);
@@ -130,7 +133,7 @@ class PropertyController extends Controller
                 ]);
 
 
-                foreach ($request->file('images') as $file) {
+                foreach ($request->images as $file) {
                     $extension = $file->getClientOriginalName();
                     $filename = time().'-'.$extension;
                     $file->move('uploads', $filename);
@@ -183,7 +186,8 @@ class PropertyController extends Controller
                 'device'  => 'required',
 
                 'cover'  => 'max:10000',
-                'images'  => 'max:10000',
+                'images.*' => 'max:10000',
+
             ]);
     
             if ($validation->fails()) {
@@ -195,8 +199,8 @@ class PropertyController extends Controller
 
             DB::beginTransaction();
 
-                if($request->file('cover')){
-                    $cover = $request->file('cover');
+                if($request->hasFile('cover')){
+                    $cover = $request->cover;
                     $extension = $cover->getClientOriginalExtension();
                     $extension = $cover->getClientOriginalName();
                     $filename = time().'-'.$extension;
@@ -226,14 +230,18 @@ class PropertyController extends Controller
                     'cover_url' =>$cover_url,
                 ]);
 
-                if($request->file('images')){
+                if($request->images){
                     $delete = Media::where('property_id',$property->id)->delete();
-                    foreach ($request->file('images') as $file) {
-                        $extension = $file->getClientOriginalName();
-                        $filename = time().'-'.$extension;
-                        $file->move('uploads', $filename);
-                        $images = 'uploads/'.$filename;
-
+                    foreach ($request->images as $file) {
+                        if($file->isvalid()){
+                            $extension = $file->getClientOriginalName();
+                            $filename = time().'-'.$extension;
+                            $file->move('uploads', $filename);
+                            $images = 'uploads/'.$filename;
+                        }
+                        else{
+                            $images = $file;
+                        }
                         $media = Media::create([
                             'lib' => 'properties',
                             'media_url' => $images,
@@ -317,7 +325,7 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\Response
      * 
      */
-    public function update_calendar(Request $request,Category $category){
+    public function update_calendar(Request $request, Category $category){
         try {
             
             $validation = Validator::make($request->all(), [
