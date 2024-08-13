@@ -54,10 +54,15 @@ class PropertyController extends Controller
     public function show(Property $property){
 
         $property['media'] = $property->media($property->id);
+        $property->user;
+        $property->note = Note::where('property_id', $property->id)->get();
+        $property->category;
+
         return response()->json([
             'message' => 'Success',
             'data' => $property
         ], 200);
+
     }
 
     /**

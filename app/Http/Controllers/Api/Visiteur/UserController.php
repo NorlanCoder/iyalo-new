@@ -7,8 +7,10 @@ use App\Models\Favory;
 use App\Models\Property;
 use App\Models\User;
 use App\Models\Note;
+use App\Models\Visit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -114,8 +116,14 @@ class UserController extends Controller
             else 
                 $properties = $properties->orderBy('created_at','desc')->paginate(10);
     
-
-                
+            $properties->map(function ($query) {
+                $query->media = $query->media($query->id);
+                $query->user;
+                $query->note = Note::where('property_id', $query->id)->get();
+                $query->category;
+                return $query;
+            });
+            
             return response()->json([
                 'status' => 200,
                 'data' => $properties,
@@ -138,6 +146,13 @@ class UserController extends Controller
     public function lastproperties(Request $request) {
         try {
             $properties = Property::orderBy('id', 'DESC')->limit(10)->get();
+            $properties->map(function ($query) {
+                $query->media = $query->media($query->id);
+                $query->user;
+                $query->note = Note::where('property_id', $query->id)->get();
+                $query->category;
+                return $query;
+            });
             return response()->json(['data' => $properties, 'status' => 200], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -159,7 +174,9 @@ class UserController extends Controller
 
             if(empty($property)) return response()->json(['message' => 'Cette propriété n\'existe pas', 'status' => 404], 404);
             $property['media'] = $property->media($id);
-            // $property = array_merge($property,)
+            $property->user;
+            $property->note = Note::where('property_id', $property->id)->get();
+            $property->category;
             return response()->json(['data' => $property, 'status' => 200], 200);
         } catch (\Exception $e) {
             DB::rollBack();
