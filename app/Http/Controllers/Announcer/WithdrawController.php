@@ -21,12 +21,19 @@ class WithdrawController extends Controller
      * 
      */
     public function index(){
-        
-        $withdraws = Withdraw::where('user_id',auth()->user()->id)->orderBy('created_at','desc')->paginate(10);
+        $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
+        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->sum('amount') - Visit::where('property_id',$property->id)->where('visited',true)->sum('free');
+        $withdrawal = Withdraw::where('user_id',auth()->user()->id)->sum('amount');
+        $wallet = $cash - $withdrawal;
+
+        $withdraws = Withdraw::where('user_id',auth()->user()->id)->orderBy('created_at','desc')->paginate(20);
 
         return response()->json([
             'status' => 200,
-            'data' => $withdraws
+            'cash' => $cash,
+            'withdrawal' => $withdrawal,
+            'wallet' => $wallet,
+            'data' => $withdraws,
         ]);
     }
 

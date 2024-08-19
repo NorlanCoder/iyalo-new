@@ -25,6 +25,72 @@ class ProfilController extends Controller
             'data' => auth()->user(),
         ], 200);
     }
+
+    
+    /**
+     * Save Push Token
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function save_token(Request $request){
+        try {
+            $validation = Validator::make($request->all(), [
+                'token_notify' => 'required',
+            ]);
+    
+            if ($validation->fails()) {
+                return response()->json(["errors" => $validation->errors()], 400);
+            }
+
+            auth()->user()->update([
+                'token_notify' => $request->token_notify,
+            ]);
+
+            return response()->json(['message' => "Success","status" => 200]);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
+        }
+    }
+
+
+    /**
+     * Update Image Profil
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function update_image(Request $request){
+
+        $validation = Validator::make($request->all(), [
+            'image'  => 'required|max:10000',
+
+        ]);
+        if ($validation->fails()) {
+            return response()->json([
+                "status" => 400,
+                "errors" => $validation->errors()
+            ], 400);
+        }
+
+        if($request->image){
+            $image = $request->image;
+            $extension = $cover->getClientOriginalName();
+            $filename = time().'-'.$extension;
+            $image->move('uploads/profil', $filename);
+            $image_url = 'uploads/profil/'.$filename;
+        }
+        
+        auth()->user()->update([
+            'image_url' => $image_url,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Successfull',
+        ], 200);
+    }
      
     /**
      * Update Info

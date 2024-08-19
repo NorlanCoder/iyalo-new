@@ -2,16 +2,41 @@
 
 namespace App\Http\Controllers\Api\Visiteur;
 
+use App\Service\NotificationService;
 use App\Http\Controllers\Controller;
 use App\Models\Favory;
 use App\Models\Property;
 use App\Models\User;
+use App\Models\Visit;
 use App\Models\Note;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    
+    public function getDateForDayOfWeek($targetDay) {
+        // Récupérer le jour de la semaine actuel (0 = dimanche, 6 = samedi)
+        $currentDay = date('w');
+    
+        // Convertir les jours en nombres si nécessaire (par exemple, si $targetDay est une chaîne)
+        $targetDay = strtolower($targetDay);
+        $daysOfWeek = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+        $targetDayNumber = array_search($targetDay, $daysOfWeek);
+    
+        // Calculer la différence de jours
+        $diff = $targetDayNumber - $currentDay;
+    
+        // Créer un objet DateTime représentant la date du jour
+        $date = new \DateTime();
+    
+        // Ajouter ou soustraire le nombre de jours nécessaire
+        $date->modify($diff . ' days');
+    
+        // Formater la date selon vos besoins
+        return $date->format('Y-m-d'); // Format AAAA-MM-JJ
+    }
     //Favoris
     /**
      * List User Favoris of User
@@ -166,6 +191,7 @@ class UserController extends Controller
             return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
     }
+       
 
     /**
      * Ask visit of User
@@ -178,7 +204,8 @@ class UserController extends Controller
         try {
             
             $validation = Validator::make($request->all(), [
-                'date_visite' => 'required',
+                'day' => 'required',
+                'hour' => 'required',
                 'amount' => 'required',
                 'type' => 'required',
                 'reference' => 'required',
@@ -188,14 +215,23 @@ class UserController extends Controller
                 return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
+            $dateCible = $this->getDateForDayOfWeek($request->day);
+            $dateString = $dateCible.' '.$request->hour;
+            $date_visite = new \DateTime($dateString);
+
             $visit = Visit::create([
-                'date_visite' => $request->date_visite,
+                'date_visite' => $date_visite,
                 'amount' => $request->amount,
+                'free' => ($property->user->free * $request->amount)/100,
                 'type' => $request->type,
                 'reference' => $request->reference,
                 'user_id' => auth()->user()->id,
                 'property_id' => $property->id,
             ]);
+
+            $pushnotif = $this->sendNotificationVisit($property->user->id,'Réservation pour visite', auth()->user()->name.' a fait une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
+            if(!$pushnotif)
+                return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 
             return response()->json([
                 "message" => 'Successfull',
@@ -219,9 +255,22 @@ class UserController extends Controller
 
         $endpoint_secret = config('fedapay.webhook_visit');
 
+        $validation = Validator::make($request->all(), [
+            'day' => '',
+            'hour' => '',
+            'amount' => '',
+            'type' => '',
+            'reference' => '',
+            'property_id' => '',
+            'user_id' => '',
+        ]);
         $payload = @file_get_contents('php://input'); 
         $sig_header = $_SERVER['HTTP_X_FEDAPAY_SIGNATURE'];
         $feda = null;
+
+        if ($validation->fails()) {
+            return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+        }
 
         try {
             $feda = \FedaPay\Webhook::constructEvent(
@@ -252,16 +301,27 @@ class UserController extends Controller
         $req = $feda->entity->custom_metadata;
         // Handle the event
         if($feda->name == 'transaction.approved'){ 
+            
+            $dateCible = $this->getDateForDayOfWeek($req->day);
+            $dateString = $dateCible.' '.$req->hour;
+            $date_visite = new \DateTime($dateString);
+            $property = Property::find($req->property_id);
 
             $visit = Visit::create([
-                'date_visite' => $req->date_visite,
+                'date_visite' => $date_visite,
                 'user_id' => $req->user_id,
                 'property_id' => $req->property_id,
+                'free' => ($property->user->free * $request->amount)/100,
                 'amount' => $feda->entity->amount,
                 'type' => $feda->entity->payment_method->brand,
                 'reference' => $feda->entity->reference,
                 'transaction' => $feda,
             ]);
+            $property = Property::find($req->property_id);
+            
+            $pushnotif = $this->sendNotificationVisit($property->user->id,'Réservation pour visite', auth()->user()->name.' a fait une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
+            if(!$pushnotif)
+                return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 
         }
         return response()->json([
@@ -295,6 +355,74 @@ class UserController extends Controller
                 'comment' => $request->comment,
                 'property_id' => $property->id,
                 'user_id' => auth()->user()->id,
+            ]);
+
+            return response()->json([
+                "message" => 'Successfull',
+                "status" => 200,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
+        }
+    }
+
+    // Visit
+    /**
+     * All list Visit of user
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function visits(Property $property){
+        
+        $visits = Visit::where('user_id',auth()->user()->id)->orderBy('created_at','desc')->paginate(20);
+        
+        return response()->json([
+            'status' => 200,
+            'data' => $visits
+        ]);
+    }
+
+    /**
+     * Mask visit by Visitor of User
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function confirm_client(Visit $visit){
+        
+        $visit->update([
+            'confirm_client'=> true,
+            'describ' => "J'ai pu faire ma visite.",
+            'visited' => $visit->confirm_owner ? true : $visit->visited,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Success'
+        ]);
+    }
+
+    /**
+     * Signal a visit of User
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function signal(Request $request,Visit $visit){
+        try {
+            
+            $validation = Validator::make($request->all(), [
+                'describ' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+            }
+
+            $visit = Visit::create([
+                'describ' => $request->describ,
             ]);
 
             return response()->json([

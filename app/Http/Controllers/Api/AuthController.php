@@ -84,19 +84,20 @@ class AuthController extends Controller
             }
     
             $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();;
-                $token = $request->user()->createToken('API-TOKEN');
-                $data =  [
-                    'user' => $user,
-                    'token' => $token->plainTextToken,
-                ];
-                return response()->json([$data]);
-            } else {
+            if (!Auth::attempt($credentials)) {
                 return response()->json([
                     "message" => "Mauvais Mail ou mot de passe",
                 ], 400);
             }
+
+            $user = Auth::user();;
+            $token = $request->user()->createToken('API-TOKEN');
+            $data =  [
+                'user' => $user,
+                'token' => $token->plainTextToken,
+            ];
+            return response()->json([$data]);
+
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }

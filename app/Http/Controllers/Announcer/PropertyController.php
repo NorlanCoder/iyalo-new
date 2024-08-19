@@ -145,6 +145,13 @@ class PropertyController extends Controller
                         'property_id' => $property->id,
                     ]);
                 }
+
+                // Send Notification
+                $notification = Notification::create([
+                    'title' => 'Nouvelle propriété disponible' ,
+                    'body' => $property->label.' disponible pour '.$property->price.' '.$property->device.'. Les droits de visite élevés à '.$property->visite_price.' '.$property->device,
+                ]);
+                
             DB::commit();
 
             return response()->json([
@@ -281,6 +288,22 @@ class PropertyController extends Controller
 
     }
 
+     /**
+     * List Calendar by Property of Announcer
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function calendar(Property $property){
+        
+        $calendars = Calendar::where('property_id',$property->id)->paginate(10);
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $calendars
+        ], 200);
+    }
+
     // Calendar
      /**
      * Add Calendar by Property of Announcer
@@ -292,8 +315,9 @@ class PropertyController extends Controller
         try {
             
             $validation = Validator::make($request->all(), [
-                'day'  => 'required',
-                'hour'  => 'required'
+                'day'  => 'required|array',
+                'hour_start'  => 'required',
+                'hour_end'  => 'required',
             ]);
     
             if ($validation->fails()) {
@@ -302,12 +326,17 @@ class PropertyController extends Controller
                     "status" => 400,
                 ], 400);
             }
-
-            $calendar = Calendar::create([
-                'day'  => $request->day,
-                'property_id'  => $property->id,
-                'hour'  => $request->hour,
-            ]);
+            $hour = [
+                'start' => $request->hour_start,
+                'end' => $request->hour_end,
+            ];
+            foreach ($request->day as $day) {
+                $calendar = Calendar::create([
+                    'day'  => $day,
+                    'property_id'  => $property->id,
+                    'hour'  => $hour,
+                ]);
+            }
 
             return response()->json([
                 "message" => 'Successfull',
@@ -325,12 +354,13 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\Response
      * 
      */
-    public function update_calendar(Request $request, Category $category){
+    public function update_calendar(Request $request, Calendar $calendar){
         try {
             
             $validation = Validator::make($request->all(), [
                 'day'  => 'required',
-                'hour'  => 'required'
+                'hour_start'  => 'required',
+                'hour_end'  => 'required',
             ]);
     
             if ($validation->fails()) {
@@ -340,9 +370,14 @@ class PropertyController extends Controller
                 ], 400);
             }
 
+            $hour = [
+                'start' => $request->hour_start,
+                'end' => $request->hour_end,
+            ];
+
             $calendar->update([
                 'day'  => $request->day,
-                'hour'  => $request->hour,
+                'hour'  => $hour,
             ]);
 
             return response()->json([
@@ -353,21 +388,20 @@ class PropertyController extends Controller
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
-    }
+    }   
 
      /**
-     * List Calendar by Property of Announcer
+     * Delete Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
      */
-    public function calendar(Property $property){
+    public function delete_calendar(Request $request, Calendar $calendar){
         
-        $calendars = Calendar::where('property_id',$property->id)->paginate(10);
+        $calendar->detete();
 
         return response()->json([
             'message' => 'Success',
-            'data' => $calendars
         ], 200);
     }
 
@@ -398,8 +432,15 @@ class PropertyController extends Controller
         
         $visits = Visit::where('property_id',$property->id)->orderBy('created_at','desc')->paginate(10);
         
+        $all_cash = Visit::where('property_id',$property->id)->sum('amount') - Visit::where('property_id',$property->id)->sum('free');
+        $pending = Visit::where('property_id',$property->id)->where('visited',false)->sum('amount') - Visit::where('property_id',$property->id)->where('visited',false)->sum('free');
+        $cash = $all_cash - $pending;
+
         return response()->json([
             'status' => 200,
+            'all_cash' => $all_cash,
+            'pending' => $pending,
+            'cash' => $cash,
             'data' => $visits
         ]);
     }
@@ -410,10 +451,11 @@ class PropertyController extends Controller
      * @return \Illuminate\Http\Response
      * 
      */
-    public function action_visit(Visit $visit){
+    public function confirm_owner(Visit $visit){
         
         $visit->update([
-            'visited'=> $visit->visited ? false : true,
+            'confirm_owner'=> true,
+            'visited' => $visit->confirm_client ? true : $visit->visited
         ]);
 
         return response()->json([

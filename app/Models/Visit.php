@@ -11,13 +11,19 @@ class Visit extends Model
 
     protected $fillable = [
         'date_visite',
-        'visited',
         'user_id',
         'property_id',
+
         'amount',
+        'free',
         'type',
         'reference',
         'transaction',
+
+        'visited',
+        'describ',
+        'confirm_client',
+        'confirm_owner'
     ];
 
     protected $casts = [

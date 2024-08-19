@@ -34,12 +34,14 @@ Route::post('reset', [AuthController::class, 'reset'])->name('reset');
 Route::get('list/category', [CategoryController::class,'listcategory'])->name('listcategory');
 Route::get('list/category/property/{id}', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
 
-Route::get('properties', [ProfilController::class, 'all_properties'])->name('all_properties');
+Route::get('properties', [VisiteurController::class, 'all_properties'])->name('all_properties');
 Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
 Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');
+    Route::put('save_token', [ProfilController::class, 'save_token'])->name('save_token');
+    Route::put('update_image', [ProfilController::class, 'update_image'])->name('update_image');
     Route::put('update_info', [ProfilController::class, 'update_info'])->name('update_info');
     Route::put('update_pass', [ProfilController::class, 'update_pass'])->name('update_pass');
     Route::delete('logout', [ProfilController::class, 'logout'])->name('logout');
@@ -51,8 +53,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('toggle/favoris/{iduser}/{idproperty}', [VisiteurController::class,'togglefavoris'])->name('togglefavoris');
         Route::get('list/favoris/{id}', [VisiteurController::class,'listfavoris'])->name('listfavoris');
 
-        // Propriete
+        // Property
         Route::post('visit/{property}/askvisit',[VisiteurController::class,'askvisit'])->name('askvisit');
+        Route::put('visit/{visit}/confirm_client', [VisiteurController::class, 'confirm_client'])->name('confirm_client');
+        Route::put('visit/{visit}/signal', [VisiteurController::class, 'signal'])->name('signal');
+
         Route::get('note/{property}',[VisiteurController::class,'note'])->name('note');
 
         Route::post('visit/fedapay',[VisiteurController::class,'askvisit_webhook'])->name('askvisit_webhook');
@@ -70,19 +75,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('announcer/property/{property}/calendar', [PropertyController::class, 'calendar'])->name('announcer.property.calendar');
         Route::post('announcer/property/{property}/add_calendar', [PropertyController::class, 'add_calendar'])->name('announcer.property.add_calendar');
         Route::put('announcer/property/{calendar}/update_calendar', [PropertyController::class, 'update_calendar'])->name('announcer.property.update_calendar');
+        Route::delete('announcer/property/{calendar}/delete_calendar', [PropertyController::class, 'delete_calendar'])->name('announcer.property.delete_calendar');
 
         Route::get('announcer/property/{property}/visits', [PropertyController::class, 'visits'])->name('announcer.property.visits');
-        Route::put('announcer/property/{visit}/action_visit', [PropertyController::class, 'action_visit'])->name('announcer.property.action_visit');
+        Route::put('announcer/property/{visit}/confirm_owner', [PropertyController::class, 'confirm_owner'])->name('announcer.property.confirm_owner');
 
         Route::get('announcer/property/{property}/notes', [PropertyController::class, 'notes'])->name('announcer.property.notes');
-
 
         // Withdraw
         Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
         Route::post('announcer/withdraw/create', [WithdrawController::class, 'create'])->name('announcer.withdraw.create');
     });
 
-    Route::middleware(['admin'])->group(function () {
+    /*Route::middleware(['admin'])->group(function () {
         // Category end-point
         Route::post('add/category', [CategoryController::class,'addcategory'])->name('addcategory');
         Route::put('update/category/{id}', [CategoryController::class,'updatecategory'])->name('updatecategory');
@@ -113,5 +118,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 
-    });
+    });*/
 });

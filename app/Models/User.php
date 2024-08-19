@@ -26,6 +26,7 @@ class User extends Authenticatable
         'birthday',
         'token_notify',
         'solde',
+        'free',
         'status',
         'role',
 
