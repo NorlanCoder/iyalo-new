@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Property;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class ProfilController extends Controller
 {
@@ -143,7 +144,7 @@ class ProfilController extends Controller
             ], 400);
         }
         
-        auth()->user()->update([
+        User::where('id', auth()->user()->id)->first()->update([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
@@ -175,16 +176,17 @@ class ProfilController extends Controller
                 "errors" => $validation->errors()
             ], 400);
         }
+        $user = User::where('id', auth()->user()->id)->first();
 
-        if(Hash::check($request->older,$user->password))
-            auth()->user()->password = Hash::make($request->password);
+        if(Hash::check($request->older, $user->password))
+            $user->password = Hash::make($request->password);
         else
             return response()->json([
                 "status" => 400,
                 "errors" => "Revoir l'ancien mot de passe"
             ], 400);
 
-        auth()->user()->save();
+        $user->save();
 
         return response()->json([
             'status' => 200,
@@ -215,31 +217,31 @@ class ProfilController extends Controller
         DB::beginTransaction();
 
             if($request->file('card')){
-                $card = $request->file('card');
-                $extension = $cover->getClientOriginalExtension();
-                $extension = $cover->getClientOriginalName();
+                $card = $request->card;
+                $extension = $card->getClientOriginalExtension();
+                $extension = $card->getClientOriginalName();
                 $filename = time().'-'.$extension;
-                $file->move('uploads/card', $filename);
+                $card->move('uploads/card', $filename);
                 $card_url = 'uploads/card/'.$filename;
             }
 
             if($request->file('logo')){
-                $logo = $request->file('logo');
-                $extension = $cover->getClientOriginalExtension();
-                $extension = $cover->getClientOriginalName();
+                $logo = $request->logo;
+                $extension = $logo->getClientOriginalExtension();
+                $extension = $logo->getClientOriginalName();
                 $filename = time().'-'.$extension;
-                $file->move('uploads/logo', $filename);
+                $logo->move('uploads/logo', $filename);
                 $logo_url = 'uploads/logo/'.$filename;
             }
-
-            auth()->user()->update([
+            $user = User::where('id', auth()->user()->id)->first();
+            $user->update([
                 'role' => 'announcer',
                 'adress' => $request->adress,
                 'card_url' => $card_url,
                 'logo' => $logo_url
             ]);
 
-            auth()->user()->tokens()->delete();
+            $user->tokens()->delete();
         DB::commit();
 
         return response()->json([
@@ -256,7 +258,8 @@ class ProfilController extends Controller
      */
     public function logout()
     {
-        auth()->user()->tokens()->delete();
+        $user = User::where('id', auth()->user()->id)->first();
+        $user->tokens()->delete();
 
         return response()->json([
             'success' => true,

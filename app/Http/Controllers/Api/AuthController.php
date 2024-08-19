@@ -184,7 +184,7 @@ class AuthController extends Controller
     public function reset(Request $request){
         try {
             $validation = Validator::make($request->all(), [
-                'email' => 'required|email',
+                'email' => 'required|email|exists:users,id',
                 'password' => 'required',
                 'confirm' => 'required|same:password',
             ]);

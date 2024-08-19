@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
+use App\Models\Note;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -45,6 +46,13 @@ class CategoryController extends Controller
 
             // Récupérer toutes les propriétés de cette catégorie
                 $properties = $category->properties;
+                $properties->map(function ($query) {
+                    $query->media = $query->media($query->id);
+                    $query->user;
+                    $query->note = Note::where('property_id', $query->id)->get();
+                    $query->category;
+                    return $query;
+                });
 
             return response()->json(['data' => $properties, 'status' => 200], 200);
         } catch (\Exception $e) {
