@@ -23,7 +23,8 @@ class Visit extends Model
         'visited',
         'describ',
         'confirm_client',
-        'confirm_owner'
+        'confirm_owner',
+        'is_refund',
     ];
 
     protected $casts = [

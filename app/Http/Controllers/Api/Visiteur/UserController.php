@@ -435,4 +435,28 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Refund cash a visit of User
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function refund(Request $request,Visit $visit){
+        try {
+            
+            $visit = Visit::create([
+                'describ' => 'Fonds remboursé au client.',
+                'is_refund' => true,
+            ]);
+
+            return response()->json([
+                "message" => 'Successfull',
+                "status" => 200,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
+        }
+    }
+
 }

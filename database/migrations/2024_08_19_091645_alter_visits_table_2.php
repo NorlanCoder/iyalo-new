@@ -15,6 +15,7 @@ return new class extends Migration
             $table->text('describ')->nullable();
             $table->boolean('confirm_client')->default(false);
             $table->boolean('confirm_owner')->default(false);
+            $table->boolean('is_refund')->default(false);
             $table->float('free')->default(0);
         });
 

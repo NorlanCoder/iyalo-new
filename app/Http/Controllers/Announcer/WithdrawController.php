@@ -15,14 +15,16 @@ class WithdrawController extends Controller
 {
 
     /**
-     * History Withdraw of Announcer
+     * History Withdraw  of Announcer
      *
      * @return \Illuminate\Http\Response
      * 
      */
     public function index(){
         $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
-        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->sum('amount') - Visit::where('property_id',$property->id)->where('visited',true)->sum('free');
+
+        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
+
         $withdrawal = Withdraw::where('user_id',auth()->user()->id)->sum('amount');
         $wallet = $cash - $withdrawal;
 
@@ -33,6 +35,32 @@ class WithdrawController extends Controller
             'cash' => $cash,
             'withdrawal' => $withdrawal,
             'wallet' => $wallet,
+            'data' => $withdraws,
+        ]);
+    }
+
+    /**
+     * History Checkout of Announcer
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function history(){
+        $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
+
+        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
+
+        $pending = Visit::whereIn('property_id',$properties)->where('visited',false)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$properties)->where('visited',false)->where('is_refund',false)->sum('free');
+
+        $all_cash = $cash + $pending;
+
+        $checkout = Visit::whereIn('property_id',$properties)->where('is_refund',false)->paginate(20);
+
+        return response()->json([
+            'status' => 200,
+            'cash' => $cash,
+            'pending' => $pending,
+            'all_cash' => $all_cash,
             'data' => $withdraws,
         ]);
     }

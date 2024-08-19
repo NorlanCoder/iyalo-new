@@ -432,8 +432,9 @@ class PropertyController extends Controller
         
         $visits = Visit::where('property_id',$property->id)->orderBy('created_at','desc')->paginate(10);
         
-        $all_cash = Visit::where('property_id',$property->id)->sum('amount') - Visit::where('property_id',$property->id)->sum('free');
-        $pending = Visit::where('property_id',$property->id)->where('visited',false)->sum('amount') - Visit::where('property_id',$property->id)->where('visited',false)->sum('free');
+        $all_cash = Visit::where('property_id',$property->id)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$property->id)->sum('free');
+        $pending = Visit::where('property_id',$property->id)->where('visited',false)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$property->id)->where('visited',false)->where('is_refund',false)->sum('free');
+        
         $cash = $all_cash - $pending;
 
         return response()->json([
