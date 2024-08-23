@@ -12,7 +12,8 @@ class Category extends Model
     protected $fillable = [
         'label',
         'icon_name',
-        'icon_source'
+        'icon_source',
+        'status'
     ];
 
     public function properties()

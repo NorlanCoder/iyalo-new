@@ -76,7 +76,7 @@ class ProfilController extends Controller
         }
 
         if($request->image){
-            $cover = $request->image;
+            $image = $request->image;
             $extension = $cover->getClientOriginalName();
             $filename = time().'-'.$extension;
             $cover->move('uploads/profil', $filename);

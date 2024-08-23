@@ -36,8 +36,8 @@ class Visit extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function porperty()
+    public function property()
     {
-        return $this->belongsTo('App\Models\Porperty');
+        return $this->belongsTo('App\Models\Property');
     }
 }
