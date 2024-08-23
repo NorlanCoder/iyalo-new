@@ -1,6 +1,6 @@
 @extends('admin.template')
 
-@section('title','Notifications')
+@section('title','Notes')
 
 @section('body')
     <div class="container-fluid">
@@ -8,54 +8,57 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h5 class="card-title fw-semibold mb-4">
-                        Historiques des notifications
+                        Historiques des Notes sur Propriétés
                     </h5>  
                 </div> 
-                <br>
+                
+                <div class="mx-5 px-5 my-4" >
+                    <form method="get" class="row text-center">
+                        <div class="col-sm-8">
+                            <input type="text" name="q" value="{{ isset($q)? $q : '' }}" class="form-control" placeholder="Rechercher.....">
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="submit" value="Rechercher" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+                
                 <div class="table-responsive">
                     <table id="example" class="table border table-striped table-bordered text-nowrap align-middle">
                         <thead>
                             <tr>
-                                <th>Agriculteur</th>
+                                <th>Clients</th>
+                                <th>Propriétés</th>
+                                <th>Proprio</th>
+                                <th>Note</th>
                                 <th>Message</th>
-                                <th>Statut</th>
                                 <th>Date</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Agriculteur</th>
+                                <th>Clients</th>
+                                <th>Propriétés</th>
+                                <th>Proprio</th>
+                                <th>Note</th>
                                 <th>Message</th>
-                                <th>Statut</th>
                                 <th>Date</th>
-                                <th></th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            @foreach($notifs as $notif)
+                            @foreach($notes as $note)
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center gap-6">
-                                            <h6 class="mb-0 text-center"> {{ $notif->user->lastname }} {{ $notif->user->firstname }}
+                                            <h6 class="mb-0 text-center"> {{ $note->user->name }} <br> {{ $note->user->email }}
                                         </div>
                                     </td>
-                                    <td> {{ $notif->alert }}</td>
+                                    <td> {{ $note->property->label }} <br> <b>{{ $note->property->category->label }}</b></td>
+                                    <td> {{ $note->property->user->name }} <br> {{ $note->property->user->email }} </td>
                                     <td>
-                                        @if($notif->read)
-                                            <span class="badge bg-success"> Lu </span>
-                                        @else
-                                            <span class="badge bg-danger"> Non Lu </span>
-                                        @endif
+                                    {{ $note->comment }}
                                     </td>
-                                    <td>{{ $notif->created_at }}</td>
-                                    <td>
-                                        @if($notif->read)
-                                            <a href="{{ route('admin.notifications.read', $notif->id) }}" class="btn btn-danger" title="Masquer comme non-lu"><i class="ti ti-mail"></i></a>
-                                        @else
-                                        <a href="{{ route('admin.notifications.read', $notif->id) }}" class="btn btn-success" title="Masquer comme lu"><i class="ti ti-mail-opened"></i></a>
-                                        @endif
-                                    </td>
+                                    <td>{{ $note->created_at }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -74,9 +77,12 @@
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json"
                 },
-                "order": [[ 3, 'desc' ]],
+                "order": [[ 5, 'desc' ]],
+                paging:   false,
+                info:   false,
+                responsive: true,
+                "searching": false
             });
-            
         });
     </script>
 @endsection

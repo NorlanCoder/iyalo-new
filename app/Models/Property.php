@@ -22,6 +22,7 @@ class Property extends Model
         'lat',
         'long',
         'description',
+        
         'room',
         'bathroom',
         'lounge',
@@ -55,5 +56,13 @@ class Property extends Model
             ])->pluck('media_url');
 
         return $media;
+    }
+
+    public function calendar($id){
+        $calendars = calendar::where([
+            'property_id' => $id,
+        ])->get();
+
+        return $calendars;
     }
 }

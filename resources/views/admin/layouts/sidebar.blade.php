@@ -3,16 +3,9 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-between">
-          <div class="row container mt-2">
-            <div  class=" col-6">
-              <a href="#">
-                    <img src='{{asset("images/icon/icon.png")}}' alt="Smart Irrigation" width="80" height="auto"/>
-                </a>
-            </div>
-            <div class="mt-3 align-items-center justify-content-between col-6">
-              <h4 class="text-white fw-bolder " >Smart Irrigation</h4>
-            </div>
-            </div>
+          <a href="#" class="text-nowrap logo-img align-items-center mt-3">
+            <h2 class="text-light text-center">IYALO<span class="text-primary">.</span></h2>
+          </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>
           </div>
@@ -33,11 +26,19 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link  @yield('users')" href="{{route('admin.users')}}" aria-expanded="false">
+              <a class="sidebar-link  @yield('clients')" href="{{route('admin.clients')}}" aria-expanded="false">
                 <span>
                   <i class="ti ti-users"></i>
                 </span>
-                <span class="hide-menu" >Utilisateurs</span>
+                <span class="hide-menu" >Clients</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link  @yield('announcer')" href="{{route('admin.announcers')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-users"></i>
+                </span>
+                <span class="hide-menu" >Annonceurs</span>
               </a>
             </li>
             <li class="sidebar-item">
@@ -49,47 +50,47 @@
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link @yield('sites')" href="{{route('admin.sites')}}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-list"></i>
-                </span>
-                <span class="hide-menu">Sites</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link @yield('cultures')" href="{{route('admin.cultures')}}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-grid"></i>
-                </span>
-                <span class="hide-menu">Cultures</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link  @yield('vannes')" href="{{route('admin.vannes')}}" aria-expanded="false">
+              <a class="sidebar-link  @yield('categories')" href="{{route('admin.categories')}}" aria-expanded="false">
                 <span>
                   <i class="ti ti-article"></i>
                 </span>
-                <span class="hide-menu">Vanne</span>
+                <span class="hide-menu">Catégories</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link  @yield('demos')" href="{{route('admin.contacts')}}" aria-expanded="false">
+              <a class="sidebar-link @yield('properties')" href="{{route('admin.properties')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-list"></i>
+                </span>
+                <span class="hide-menu">Propriétés</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link @yield('visits')" href="{{route('admin.visits')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-layout-grid"></i>
+                </span>
+                <span class="hide-menu">Bilans Entrants</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link  @yield('withdraws')" href="{{route('admin.withdraws')}}" aria-expanded="false">
                 <span>
                   <i class="ti ti-list"></i>
                 </span>
-                <span class="hide-menu">Souscription</span>
+                <span class="hide-menu">Bilans Sortants</span>
               </a>
             </li>
             <li class="sidebar-item">
-              <a class="sidebar-link  @yield('comments')" href="{{route('admin.comments')}}" aria-expanded="false">
+              <a class="sidebar-link  @yield('notes')" href="{{route('admin.notes')}}" aria-expanded="false">
                 <span>
                   <i class="ti ti-message"></i>
                 </span>
-                <span class="hide-menu">Commentaires</span>
+                <span class="hide-menu">Notes</span>
               </a>
             </li>
             <li class="sidebar-item ">
-              <a class="sidebar-link text-danger" href="{{ route('logout') }}" aria-expanded="false">
+              <a class="sidebar-link text-danger" href="{{ route('auth.logout') }}" aria-expanded="false">
                 <span>
                   <i class="ti ti-logout"></i>
                 </span>

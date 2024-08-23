@@ -13,15 +13,10 @@
                         @csrf
                         @method('put')
                         <div class="row">
-                            <div class="mb-3 col-sm-6">
-                                <label for="firstname" class="form-label">Nom</label>
-                                <input type="text" class="form-control" name="firstname" value="{{ auth()->user()->firstname }}">
-                                <div id="emailHelp" class="form-text text-danger">@error('firstname'){{ $message }} @enderror</div>
-                            </div>
-                            <div class="mb-3 col-sm-6">
-                                <label for="lastname" class="form-label">Prénoms</label>
-                                <input type="text" class="form-control" name="lastname" value="{{ auth()->user()->lastname }}">
-                                <div id="emailHelp" class="form-text text-danger">@error('lastname'){{ $message }} @enderror</div>
+                            <div class="mb-3 col-sm-12">
+                                <label for="name" class="form-label">Nom Complet</label>
+                                <input type="text" class="form-control" name="name" value="{{ auth()->user()->name }}">
+                                <div id="emailHelp" class="form-text text-danger">@error('name'){{ $message }} @enderror</div>
                             </div>
                             <div class="mb-3 col-sm-6">
                                 <label for="email" class="form-label">Email Electronique</label>
@@ -29,9 +24,9 @@
                                 <div id="emailHelp" class="form-text text-danger">@error('email'){{ $message }} @enderror</div>
                             </div>
                             <div class="mb-3 col-sm-6">
-                                <label for="phonenumber" class="form-label">Télephone</label>
-                                <input type="tel" class="form-control" name="phonenumber" value="{{ auth()->user()->phonenumber }}">
-                                <div id="emailHelp" class="form-text text-danger">@error('phonenumber'){{ $message }} @enderror</div>
+                                <label for="phone" class="form-label">Télephone</label>
+                                <input type="tel" class="form-control" name="phone" value="{{ auth()->user()->phone }}">
+                                <div id="emailHelp" class="form-text text-danger">@error('phone'){{ $message }} @enderror</div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Changer les Informations</button>

@@ -22,6 +22,10 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->float('free')->default(20);
         });
+
+        Schema::table('categories', function (Blueprint $table) {
+            $table->boolean('status')->default(true);
+        });
     }
 
     /**
@@ -33,10 +37,14 @@ return new class extends Migration
             $table->dropColumn('describ');
             $table->dropColumn('confirm_client');
             $table->dropColumn('confirm_owner');
+            $table->dropColumn('is_refund');
             $table->dropColumn('free');
         });
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('free');
+        });
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 };
