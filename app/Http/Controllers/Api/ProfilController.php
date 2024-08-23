@@ -65,7 +65,7 @@ class ProfilController extends Controller
     public function update_image(Request $request){
 
         $validation = Validator::make($request->all(), [
-            'image'  => 'required|max:10000',
+            'image'  => 'file',
 
         ]);
         if ($validation->fails()) {
@@ -76,10 +76,10 @@ class ProfilController extends Controller
         }
 
         if($request->image){
-            $image = $request->image;
+            $cover = $request->image;
             $extension = $cover->getClientOriginalName();
             $filename = time().'-'.$extension;
-            $image->move('uploads/profil', $filename);
+            $cover->move('uploads/profil', $filename);
             $image_url = 'uploads/profil/'.$filename;
         }
         

@@ -7,13 +7,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Favory;
 use App\Models\Property;
 use App\Models\User;
-use App\Models\Visit;
+// use App\Models\Visit;
 use App\Models\Note;
 use App\Models\Visit;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+// use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
