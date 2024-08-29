@@ -27,6 +27,22 @@ class ProfilController extends Controller
         ], 200);
     }
 
+    /**
+     * History Notification
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function history(){
+
+        $notifications = Notification::where('user_id',auth()->user()->id)->get();
+    
+        return response()->json([
+            'status' => 200,
+            'data' => $notifications,
+        ], 200);
+    }
+
     
     /**
      * Save Push Token

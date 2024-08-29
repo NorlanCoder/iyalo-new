@@ -21,6 +21,7 @@ return new class extends Migration
 
         Schema::table('users', function (Blueprint $table) {
             $table->float('free')->default(20);
+            $table->string('token')->nullable();
         });
 
         Schema::table('categories', function (Blueprint $table) {
@@ -42,6 +43,7 @@ return new class extends Migration
         });
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('free');
+            $table->dropColumn('token');
         });
         Schema::table('categories', function (Blueprint $table) {
             $table->dropColumn('status');

@@ -47,6 +47,14 @@ class NotificationService
     public function sendNotificationVisit($id, $title, $body){
         $user = User::find($id);
 
+        $notification = Notification::create([
+            'title' => $title,
+            'body' => $body,
+            'role' => 'announcer',
+            'is_push' => true,
+            'user_id' => $id,
+        ]);
+
         $message = CloudMessage::withTarget('token', $user->token_notify)
         ->withNotification([
             'title' => $title,
@@ -58,15 +66,8 @@ class NotificationService
 
         Firebase::messaging()->send($message);
 
-        $notification = Notification::create([
-            'title' => $title,
-            'body' => $body,
-            'role' => 'announcer',
-            'is_push' => true,
-            'user_id' => $id,
-        ]);
-
         return true;
     }
+
 
 }
