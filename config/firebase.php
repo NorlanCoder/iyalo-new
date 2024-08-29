@@ -50,8 +50,8 @@ return [
              *
              */
 
-            'credentials' => env('FIREBASE_CREDENTIALS', env('GOOGLE_APPLICATION_CREDENTIALS')),
-            // 'credentials' => env('FIREBASE_CREDENTIALS', public_path('iyalo-5d027-firebase.json')),
+            // 'credentials' => env('FIREBASE_CREDENTIALS', env('GOOGLE_APPLICATION_CREDENTIALS')),
+            'credentials' => env('FIREBASE_CREDENTIALS', base_path('iyalo-5d027-firebase.json')),
 
 
             /*
