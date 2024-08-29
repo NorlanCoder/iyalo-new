@@ -72,4 +72,23 @@ class AnnouncerController extends Controller
         return view('admin.file.announcers.wallets',compact('withdraws','cash','withdrawal','wallet','user'));
     }
 
+    public function percent(Request $request, User $user){
+        $validation = Validator::make($request->all(), [
+            'percent' => 'required',
+        ]);
+
+        if ($validation->fails()){
+            Session::flash('danger', "Erreur dans le formulaire");
+            $this->validate($request, [
+                'percent' => 'required',
+            ]) ;
+        }
+
+        $user->update([
+           'free' => $request->percent, 
+        ]);
+
+        return back()->with('success','Information bien modifiée');
+    }
+
 }

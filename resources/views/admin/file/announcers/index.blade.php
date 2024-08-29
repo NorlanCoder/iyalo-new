@@ -29,6 +29,7 @@
                                 <th>Nom Complet</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Frais IYALO</th>
                                 <th>Statut</th>
                                 <th>Date</th>
                                 <th></th>
@@ -39,6 +40,7 @@
                                 <th>Nom Complet</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Frais IYALO</th>
                                 <th>Statut</th>
                                 <th>Date</th>
                                 <th></th>
@@ -59,6 +61,9 @@
                                         {{ $user->phone }}
                                     </td>
                                     <td>
+                                        {{ $user->free }}%
+                                    </td>
+                                    <td>
                                         @if($user->status)
                                             <span class="badge bg-success"> Actif </span>
                                         @else
@@ -70,12 +75,14 @@
                                         <a href="{{route('admin.announcers.properties', $user->id)}}" title="Historiques visiteurs" class="btn  bg-primary-subtle"><i class="ti ti-home"></i></a>
                                         <a href="{{route('admin.announcers.visits', $user->id)}}" title="Historiques Propriétés" class="btn  bg-warning-subtle"><i class="ti ti-users"></i></a>
                                         <a href="{{route('admin.announcers.wallets', $user->id)}}" title="Historiques transactions" class="btn  bg-danger-subtle"><i class="ti ti-cash"></i></a>
+                                        <a type="button"  data-bs-toggle="modal" data-bs-target="#free{{$user->id}}" class="btn  bg-warning"><i class="ti ti-percentage"></i></a>
 
                                         @if($user->status)
                                             <a type="button"  data-bs-toggle="modal" data-bs-target="#action{{$user->id}}" class="btn btn-danger"><i class="ti ti-lock"></i></a>
                                         @else
                                             <a type="button"  data-bs-toggle="modal" data-bs-target="#action{{$user->id}}" class="btn btn-success"><i class="ti ti-lock-open"></i></a>
                                         @endif
+
                                     </td>
                                 </tr>
                                 @include('admin.file.announcers.modal')
@@ -100,7 +107,7 @@
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json"
                 },
-                "order": [[ 4, 'desc' ]],
+                "order": [[ 5, 'desc' ]],
                 paging:   false,
                 info:   false,
                 responsive: true,
