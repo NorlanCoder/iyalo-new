@@ -40,6 +40,7 @@ Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperti
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');
+    Route::get('history', [ProfilController::class, 'history'])->name('history');
     Route::put('save_token', [ProfilController::class, 'save_token'])->name('save_token');
     Route::put('update_image', [ProfilController::class, 'update_image'])->name('update_image');
     Route::put('update_info', [ProfilController::class, 'update_info'])->name('update_info');
