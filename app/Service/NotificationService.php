@@ -3,7 +3,10 @@
 namespace App\Service;
 
 use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\LaravelFirebase\Facades\Firebase;
+use Kreait\Laravel\Firebase\Facades\Firebase;
+use Kreait\Firebase\Factory;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\Notification;
 use App\Models\User;
 
@@ -12,22 +15,31 @@ class NotificationService
     
     public function sendNotificationAtVisitor()
     {
-        $pending = Notification::where('role','visitor')->where('is_push',false);
-        $notifications = $pending->get();
-        $tokens = User::where('role','visitor')->pluck('token_notify');
-        $pending->update([
-            'is_push' =>true,]
-        );
+        Log::info('Start Push');
+        DB::beginTransaction();
+            $pending = Notification::where('role','visitor')->where('is_push',false);
+            $notifications = $pending->get();
+            $tokens = User::where('role','visitor')->where('token_notify','!=','')->pluck('token_notify');
+            $pending->update([
+                'is_push' =>true,]
+            );
 
-        foreach ($notifications as $notification) {
-            $message = CloudMessage::withTarget('token', $tokens)
-            ->withNotification([
-                'title' => $notification->title,
-                'body' => $notification->body,
-            ]);
-    
-            Firebase::messaging()->send($message);
-        }
+            foreach ($notifications as $notification) {
+                foreach ($tokens as $token) {
+                    $message = CloudMessage::withTarget('token', $token)
+                    ->withNotification([
+                        'title' => $notification->title,
+                        'body' => $notification->body,
+                        'data' => [
+                            'id' => $notification->id,
+                        ],
+                    ]);
+                    Firebase::messaging()->send($message);
+                }
+            }
+        DB::commit();
+        Log::info('End Push');
+
         return true;
 
     }
@@ -39,6 +51,9 @@ class NotificationService
         ->withNotification([
             'title' => $title,
             'body' => $body,
+            'data' => [
+                'id' => $notification->id,
+            ],
         ]);
 
         Firebase::messaging()->send($message);
