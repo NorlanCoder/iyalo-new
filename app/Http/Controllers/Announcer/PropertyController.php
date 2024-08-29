@@ -464,6 +464,9 @@ class PropertyController extends Controller
             'visited' => $visit->confirm_client ? true : $visit->visited
         ]);
 
+        if($visit->visited)  
+            $pushnotif = $this->sendNotificationVisit($visit->property->user->id,'Confirmation de Visite', $visit->user->name.' a confirmé que la réservation pour la visite de '.$visit->property->label.' a eu lieu. Veuillez consulter votre compte pour entrer en possession de vos fonds. Montant '.($visit->amount - $visit->free).' '.$visit->property->device);
+
         return response()->json([
             'status' => 200,
             'message' => 'Success'

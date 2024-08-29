@@ -1,16 +1,223 @@
 <?php
+
+declare(strict_types=1);
+
 return [
-    'credentials' => [
-        "type" => "service_account",
-        "project_id"=> "iyalo-5d027",
-        "private_key_id"=> "0e3effab3fffcc86a7346609f22ce5515dbf4cc1",
-        "private_key"=> "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDaaYNhKh9f1fGi\nbGLTciLqkFvdDn60wi9O3zcPy4ciwdEUGfdIAp+qjV8cuV1NqpVK7YibozQSvbFr\nbJFbg4355RhEfT9/6l9nxDyw+XK3LgIbX8i/WwZCfeKS63oeovZYwlqUzg9F3rnd\npCRtJy6j8US/uXPs8Lxk7OreDj3C6euOzqa+1huPJ4eyBP5TaC1LMwcQ7IPWEtlY\nGg8ByIag0V1Pp6kzQAYILFN0FCyy58QBNgyhcMy8kDjrGU52GmL+zYLNyuQ16R1n\n2lkzXKOfblZUW6XyvTJJVH0Onq4ZNafj2NJg/m3dSUNMHbDlq5vXG/LKIqYI4z9S\nuj8v/Du5AgMBAAECggEABxZZrKlb4YWdHMzI06zuWF91Faoi3y12cMgiPqVXdh+l\nL9JsYWYxZWzHN3TF4+9rPwZQcqFz/wAwDcj0+gvdq2xdUlqgmP9jV2gJIqKDkBFi\ngN4lstzqqfVxCNyyhqQ523U6EH5TxUwGCrzI8FBPTYNWnGSRkBCbQmikMe6zHxwd\n/Ye2h9zRAVqTa/gWFJAKvxI4gnlig61AgN7O7dh8SfNqLZIXEqUtGoIV2d4v4o55\nji6hF9nOVFGasHppAQBLYX/nZwsVmId3qs2h8uNAtEdWi0P0WegiZGDB/FkPoVLh\nW59WvBkqmsi55GqVv7xfdG63Ef86tFV7jaFM828tUQKBgQD0dSBhpj63T94GOA2W\nog+rsiMry4QJXsC5BjAE4eUxFr7C1kxjUREK//9F5mAnOh9j1HxORXCnEo1rfKAs\nCyDbySwcm0V5k4gZ5e2kbWQR1moGNcH9m1R9jhB3j+nh6irYE1qQwfqttWZY60pS\nafRfaZ71v7969/jwI9ujRqb7UQKBgQDkuZBooPQZVhL0x1LfKmL8s5Bw8DkQz7yj\nuoAs/FdsTG3s1Guz0ixczWDgt9iduKkQVG2hl1/XZy3C9rbzc2kStTZk/CBuqxlK\nIxsBqaSIwMfnf4UqBVe6Cq61Uz5z/YFVKdXk4IcLSwMcUXM2PPvfvp4ykYV3h2fJ\nlFYPV1vP6QKBgQDPhMZyXsAKuWAPA3J1lymaZWR5/xAdLDSKXPhSjLkVTOuvVmAO\nR3kiT2MSoZiqdCrFglHr2ALjsVogDvGhsei46zPpLN5zcIwvAAMWfE5g3hWvI9+E\nPGIjG4BbHu46e6DXQMa28BSvdbhmb4buI0fx3yW0FIymBO9sW+RN3OJPoQKBgCH2\nF6Yhd/0nFat4ySpPveDtvJ24XZDMd6ML9yo20bhH5O6MX+2UYHfrGt5jDevlVl0R\nXDHpKxbtwBK51VJyqYBYndoCwcIM77VdXw4xJTgU/9m0yo4BuxPpsCVGVfidBI4j\npxnT6NlZav3Sbjv4dCG1yQGTL/Eejt+Uge7HNt+5AoGBAPCr3XLS+FXCjb/v6EUD\nERoLNpCYbVAyoEzG9so+NUUv11iYyUZFJrNNh62C5Cp4oDKgX3zDEEd1hoROF4w6\niXu7ydQ90aQHab3ylauoO6ENZd+/JxPjydIg4j34DSkOkcLg53BypKgDN+qYp/0p\nvbatUaOybECl/lkzLpbj5ni8\n-----END PRIVATE KEY-----\n",
-        "client_email"=> "firebase-adminsdk-mn2ri@iyalo-5d027.iam.gserviceaccount.com",
-        "client_id"=> "101233435926683346632",
-        "auth_uri"=> "https://accounts.google.com/o/oauth2/auth",
-        "token_uri"=> "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url"=> "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url"=> "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-mn2ri%40iyalo-5d027.iam.gserviceaccount.com",
-        "universe_domain"=> "googleapis.com"
+    /*
+     * ------------------------------------------------------------------------
+     * Default Firebase project
+     * ------------------------------------------------------------------------
+     */
+
+    'default' => env('FIREBASE_PROJECT', 'app'),
+
+    /*
+     * ------------------------------------------------------------------------
+     * Firebase project configurations
+     * ------------------------------------------------------------------------
+     */
+
+    'projects' => [
+        'app' => [
+
+            /*
+             * ------------------------------------------------------------------------
+             * Credentials / Service Account
+             * ------------------------------------------------------------------------
+             *
+             * In order to access a Firebase project and its related services using a
+             * server SDK, requests must be authenticated. For server-to-server
+             * communication this is done with a Service Account.
+             *
+             * If you don't already have generated a Service Account, you can do so by
+             * following the instructions from the official documentation pages at
+             *
+             * https://firebase.google.com/docs/admin/setup#initialize_the_sdk
+             *
+             * Once you have downloaded the Service Account JSON file, you can use it
+             * to configure the package.
+             *
+             * If you don't provide credentials, the Firebase Admin SDK will try to
+             * auto-discover them
+             *
+             * - by checking the environment variable FIREBASE_CREDENTIALS
+             * - by checking the environment variable GOOGLE_APPLICATION_CREDENTIALS
+             * - by trying to find Google's well known file
+             * - by checking if the application is running on GCE/GCP
+             *
+             * If no credentials file can be found, an exception will be thrown the
+             * first time you try to access a component of the Firebase Admin SDK.
+             *
+             */
+
+            // 'credentials' => env('FIREBASE_CREDENTIALS', env('GOOGLE_APPLICATION_CREDENTIALS')),
+            'credentials' => env('FIREBASE_CREDENTIALS', base_path('iyalo-5d027-firebase.json')),
+
+
+            /*
+             * ------------------------------------------------------------------------
+             * Firebase Auth Component
+             * ------------------------------------------------------------------------
+             */
+
+            'auth' => [
+                'tenant_id' => env('FIREBASE_AUTH_TENANT_ID'),
+            ],
+
+            /*
+             * ------------------------------------------------------------------------
+             * Firestore Component
+             * ------------------------------------------------------------------------
+             */
+
+            'firestore' => [
+
+                /*
+                 * If you want to access a Firestore database other than the default database,
+                 * enter its name here.
+                 *
+                 * By default, the Firestore client will connect to the `(default)` database.
+                 *
+                 * https://firebase.google.com/docs/firestore/manage-databases
+                 */
+
+                // 'database' => env('FIREBASE_FIRESTORE_DATABASE'),
+            ],
+
+            /*
+             * ------------------------------------------------------------------------
+             * Firebase Realtime Database
+             * ------------------------------------------------------------------------
+             */
+
+            'database' => [
+
+                /*
+                 * In most of the cases the project ID defined in the credentials file
+                 * determines the URL of your project's Realtime Database. If the
+                 * connection to the Realtime Database fails, you can override
+                 * its URL with the value you see at
+                 *
+                 * https://console.firebase.google.com/u/1/project/_/database
+                 *
+                 * Please make sure that you use a full URL like, for example,
+                 * https://my-project-id.firebaseio.com
+                 */
+
+                'url' => env('FIREBASE_DATABASE_URL'),
+
+                /*
+                 * As a best practice, a service should have access to only the resources it needs.
+                 * To get more fine-grained control over the resources a Firebase app instance can access,
+                 * use a unique identifier in your Security Rules to represent your service.
+                 *
+                 * https://firebase.google.com/docs/database/admin/start#authenticate-with-limited-privileges
+                 */
+
+                // 'auth_variable_override' => [
+                //     'uid' => 'my-service-worker'
+                // ],
+
+            ],
+
+            'dynamic_links' => [
+
+                /*
+                 * Dynamic links can be built with any URL prefix registered on
+                 *
+                 * https://console.firebase.google.com/u/1/project/_/durablelinks/links/
+                 *
+                 * You can define one of those domains as the default for new Dynamic
+                 * Links created within your project.
+                 *
+                 * The value must be a valid domain, for example,
+                 * https://example.page.link
+                 */
+
+                'default_domain' => env('FIREBASE_DYNAMIC_LINKS_DEFAULT_DOMAIN'),
+            ],
+
+            /*
+             * ------------------------------------------------------------------------
+             * Firebase Cloud Storage
+             * ------------------------------------------------------------------------
+             */
+
+            'storage' => [
+
+                /*
+                 * Your project's default storage bucket usually uses the project ID
+                 * as its name. If you have multiple storage buckets and want to
+                 * use another one as the default for your application, you can
+                 * override it here.
+                 */
+
+                'default_bucket' => env('FIREBASE_STORAGE_DEFAULT_BUCKET'),
+
+            ],
+
+            /*
+             * ------------------------------------------------------------------------
+             * Caching
+             * ------------------------------------------------------------------------
+             *
+             * The Firebase Admin SDK can cache some data returned from the Firebase
+             * API, for example Google's public keys used to verify ID tokens.
+             *
+             */
+
+            'cache_store' => env('FIREBASE_CACHE_STORE', 'file'),
+
+            /*
+             * ------------------------------------------------------------------------
+             * Logging
+             * ------------------------------------------------------------------------
+             *
+             * Enable logging of HTTP interaction for insights and/or debugging.
+             *
+             * Log channels are defined in config/logging.php
+             *
+             * Successful HTTP messages are logged with the log level 'info'.
+             * Failed HTTP messages are logged with the log level 'notice'.
+             *
+             * Note: Using the same channel for simple and debug logs will result in
+             * two entries per request and response.
+             */
+
+            'logging' => [
+                'http_log_channel' => env('FIREBASE_HTTP_LOG_CHANNEL'),
+                'http_debug_log_channel' => env('FIREBASE_HTTP_DEBUG_LOG_CHANNEL'),
+            ],
+
+            /*
+             * ------------------------------------------------------------------------
+             * HTTP Client Options
+             * ------------------------------------------------------------------------
+             *
+             * Behavior of the HTTP Client performing the API requests
+             */
+
+            'http_client_options' => [
+
+                /*
+                 * Use a proxy that all API requests should be passed through.
+                 * (default: none)
+                 */
+
+                'proxy' => env('FIREBASE_HTTP_CLIENT_PROXY'),
+
+                /*
+                 * Set the maximum amount of seconds (float) that can pass before
+                 * a request is considered timed out
+                 *
+                 * The default time out can be reviewed at
+                 * https://github.com/kreait/firebase-php/blob/6.x/src/Firebase/Http/HttpClientOptions.php
+                 */
+
+                'timeout' => env('FIREBASE_HTTP_CLIENT_TIMEOUT'),
+
+                'guzzle_middlewares' => [],
+            ],
+        ],
     ],
 ];

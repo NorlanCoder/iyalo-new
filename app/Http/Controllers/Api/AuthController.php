@@ -46,11 +46,11 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'phone' => $request->phone,
                 // 'birthday' => $request->birthday,
-                'token_notify' => random_int(100000, 999999),
+                'token' => random_int(100000, 999999),
                 'password' => Hash::make($request->password),
             ]);
 
-            $mailer->activationMail($user->token_notify, $user->email);
+            $mailer->activationMail($user->token, $user->email);
 
             DB::commit();
     
@@ -127,10 +127,10 @@ class AuthController extends Controller
 
             DB::beginTransaction();
                 $user->update([
-                    'token_notify' => random_int(100000, 999999),
+                    'token' => random_int(100000, 999999),
                 ]);
 
-                $mailer->activationMail($user->token_notify, $user->email);
+                $mailer->activationMail($user->token, $user->email);
             DB::commit();
 
             return response()->json(["message" => 'Email is sending']);
@@ -161,7 +161,7 @@ class AuthController extends Controller
 
             $exist = User::where([
                 'email' => $request->email,
-                'token_notify' => $request->token,
+                'token' => $request->token,
             ])->first();
 
             if(!$exist)
