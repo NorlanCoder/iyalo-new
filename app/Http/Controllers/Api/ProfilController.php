@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -92,7 +93,7 @@ class ProfilController extends Controller
         }
 
         if($request->image){
-            $image = $request->image;
+            $cover = $request->image;
             $extension = $cover->getClientOriginalName();
             $filename = time().'-'.$extension;
             $cover->move('uploads/profil', $filename);
