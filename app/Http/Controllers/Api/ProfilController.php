@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Property;
-use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 

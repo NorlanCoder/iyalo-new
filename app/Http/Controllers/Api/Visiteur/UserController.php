@@ -401,6 +401,8 @@ class UserController extends Controller
 
     /**
      * Mask visit by Visitor of User
+     * 
+     * Cette action permet de confirmer que le client a bien pu faire la visite
      *
      * @return \Illuminate\Http\Response
      * 

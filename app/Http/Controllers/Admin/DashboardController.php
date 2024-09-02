@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Models\Note;
 use App\Models\User;
+use App\Models\Visit;
 use App\Models\Category;
 use App\Models\Property;
 use Illuminate\Http\Request;
@@ -15,7 +16,15 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index(){
-        return view('admin.file.dashboard');
+        $client = User::where('role','visitor')->count();
+        $announcer = User::where('role','announcer')->count();
+
+        $visit = Visit::count();
+        $iyalo = Visit::where('visited',true)->sum('free');
+
+        $recents = Visit::where('visited',true)->limit(6);
+        
+        return view('admin.file.dashboard', compact('client','announcer','visit','iyalo','recents'));
     }
 
     
