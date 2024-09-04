@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Note;
 use App\Models\User;
@@ -12,6 +13,8 @@ use App\Models\Visit;
 use App\Models\Category;
 use App\Models\Property;
 use Illuminate\Http\Request;
+
+use DevRaeph\PDFPasswordProtect\Facade\PDFPasswordProtect;
 
 class DashboardController extends Controller
 {
@@ -23,7 +26,7 @@ class DashboardController extends Controller
         $iyalo = Visit::where('visited',true)->sum('free');
 
         $recents = Visit::where('visited',true)->limit(6);
-        
+
         return view('admin.file.dashboard', compact('client','announcer','visit','iyalo','recents'));
     }
 

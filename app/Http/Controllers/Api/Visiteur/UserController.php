@@ -7,9 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Favory;
 use App\Models\Property;
 use App\Models\User;
-// use App\Models\Visit;
+use App\Models\Visit;
 use App\Models\Note;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -210,48 +211,55 @@ class UserController extends Controller
 
     /**
      * Ask visit of User
+     * 
+     * @unauthenticated
+     * 
+     * Faire le paiement via Fedapay par Callback. Il faut mettre dans le customer_metadata les variables <b> user_id, proprety_id, day, hour </b>
      *
      * @return \Illuminate\Http\Response
      * 
      */
-    public function askvisit(Request $request, Property $property){
+    public function askvisit(Request $request){
         
         try {
+            // dd($request->id);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer sk_sandbox_ricGepZOgS0u4YviGOnarIPc',
+                'Content-Type' => 'application/json',
+            ])->get('https://sandbox-api.fedapay.com/v1/transactions/'.$request->id);
             
-            $validation = Validator::make($request->all(), [
-                'day' => 'required',
-                'hour' => 'required',
-                'amount' => 'required',
-                'type' => 'required',
-                'reference' => 'required',
-            ]);
+            $data = $response->json()["v1/transaction"];
 
-            if ($validation->fails()) {
-                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+            // Gestion de la réponse
+            if (!$response->successful()) {
+                return response()->json(['error' => 'Erreur lors de la récupération de la transaction'], 500);
             }
+            $property = Property::find($data['custom_metadata']['property_id']);
+            $user = User::find($data['custom_metadata']['user_id']);
 
-            $dateCible = $this->getDateForDayOfWeek($request->day);
-            $dateString = $dateCible.' '.$request->hour;
+
+            $dateCible = $this->getDateForDayOfWeek($data['custom_metadata']['day']);
+            $dateString = $dateCible.' '.$data['custom_metadata']['hour'];
             $date_visite = new \DateTime($dateString);
 
             $visit = Visit::create([
                 'date_visite' => $date_visite,
-                'amount' => $request->amount,
-                'free' => ($property->user->free * $request->amount)/100,
-                'type' => $request->type,
-                'reference' => $request->reference,
-                'user_id' => auth()->user()->id,
+                'amount' => $data['amount'],
+                'free' => ($property->user->free * $data['amount'])/100,
+                'type' => 'fedapay',
+                'reference' => $data['reference'],
+                'user_id' => $user->id,
                 'property_id' => $property->id,
             ]);
 
-            $pushnotif = $this->sendNotificationVisit($property->user->id,'Réservation pour visite', auth()->user()->name.' a fait une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
-            if(!$pushnotif)
-                return response()->json(["errors" => 'Push Error', "status" => 400], 400);
+            // $pushnotif = new NotificationService();
+            // $pushnotif->sendNotificationVisit($property->user->id,'Réservation pour visite', $user->name.' a fait une réservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
+            
+            // if(!$pushnotif)
+            //     return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 
-            return response()->json([
-                "message" => 'Successfull',
-                "status" => 200,
-            ]);
+            return 'approuved';
 
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
@@ -260,6 +268,8 @@ class UserController extends Controller
     
     /**
      * Fedapay Webhook Visit of User
+     * 
+     * @unauthenticated
      * 
      * Fedapay Webhook for asking visit
      *

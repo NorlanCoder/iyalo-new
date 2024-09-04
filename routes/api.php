@@ -24,6 +24,9 @@ use App\Http\Controllers\Announcer\WithdrawController;
 |
 */
 
+Route::get('visit/callback',[VisiteurController::class,'askvisit'])->name('askvisit');
+Route::post('visit/fedapay',[VisiteurController::class,'askvisit_webhook'])->name('askvisit_webhook');
+
 Route::post('register', [AuthController::class, 'register'])->name('register');
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('forget', [AuthController::class, 'forget'])->name('forget');
@@ -55,13 +58,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('list/favoris/{id}', [VisiteurController::class,'listfavoris'])->name('listfavoris');
 
         // Property
-        Route::post('visit/{property}/askvisit',[VisiteurController::class,'askvisit'])->name('askvisit');
         Route::put('visit/{visit}/confirm_client', [VisiteurController::class, 'confirm_client'])->name('confirm_client');
         Route::put('visit/{visit}/signal', [VisiteurController::class, 'signal'])->name('signal');
 
-        Route::get('note/{property}',[VisiteurController::class,'note'])->name('note');
+        Route::post('note/{property}',[VisiteurController::class,'note'])->name('note');
 
-        Route::post('visit/fedapay',[VisiteurController::class,'askvisit_webhook'])->name('askvisit_webhook');
 
     });
 

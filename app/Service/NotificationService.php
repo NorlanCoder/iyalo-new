@@ -30,9 +30,8 @@ class NotificationService
                     ->withNotification([
                         'title' => $notification->title,
                         'body' => $notification->body,
-                        'data' => [
-                            'id' => $notification->id,
-                        ],
+                    ])->withData([
+                        'id' => $notification->id,
                     ]);
                     Firebase::messaging()->send($message);
                 }
@@ -59,9 +58,8 @@ class NotificationService
         ->withNotification([
             'title' => $title,
             'body' => $body,
-            'data' => [
-                'id' => $notification->id,
-            ],
+        ])->withData([
+            'id' => $notification->id,
         ]);
 
         Firebase::messaging()->send($message);
