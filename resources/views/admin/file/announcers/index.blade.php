@@ -72,8 +72,8 @@
                                     </td>
                                     <td>{{ $user->created_at }}</td>
                                     <td>
-                                        <a href="{{route('admin.announcers.properties', $user->id)}}" title="Historiques visiteurs" class="btn  bg-primary-subtle"><i class="ti ti-home"></i></a>
-                                        <a href="{{route('admin.announcers.visits', $user->id)}}" title="Historiques Propriétés" class="btn  bg-warning-subtle"><i class="ti ti-users"></i></a>
+                                        <a href="{{route('admin.announcers.properties', $user->id)}}" title="Historiques Propriétés"  class="btn  bg-primary-subtle"><i class="ti ti-home"></i></a>
+                                        <a href="{{route('admin.announcers.visits', $user->id)}}" title="Historiques visiteurs" class="btn  bg-warning-subtle"><i class="ti ti-users"></i></a>
                                         <a href="{{route('admin.announcers.wallets', $user->id)}}" title="Historiques transactions" class="btn  bg-danger-subtle"><i class="ti ti-cash"></i></a>
                                         <a type="button"  data-bs-toggle="modal" data-bs-target="#free{{$user->id}}" class="btn  bg-warning"><i class="ti ti-percentage"></i></a>
 

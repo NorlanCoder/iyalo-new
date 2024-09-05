@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use App\Service\NotificationService;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Property;
@@ -58,8 +59,9 @@ class VisitController extends Controller
             'visited' => true,
         ]);
 
-        if($visit->visited)  
-            $pushnotif = $this->sendNotificationVisit($visit->property->user->id,'Confirmation de Visite', $visit->user->name.' a confirmé que la réservation pour la visite de '.$visit->property->label.' a eu lieu. Veuillez consulter votre compte pour entrer en possession de vos fonds. Montant '.($visit->amount - $visit->free).' '.$visit->property->device);
+        // if($visit->visited)
+        //     $pushnotif = new NotificationService();
+        //     $pushnotif->sendNotificationVisit($visit->property->user->id,'Confirmation de Visite', $visit->user->name.' a confirmé que la réservation pour la visite de '.$visit->property->label.' a eu lieu. Veuillez consulter votre compte pour entrer en possession de vos fonds. Montant '.($visit->amount - $visit->free).' '.$visit->property->device);
 
         return back()->with('success','Succès');
 

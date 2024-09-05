@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Visit;
@@ -25,9 +26,37 @@ class DashboardController extends Controller
         $visit = Visit::count();
         $iyalo = Visit::where('visited',true)->sum('free');
 
-        $recents = Visit::where('visited',true)->limit(6);
+        $recentes = Visit::where('visited',true)->orderBy('created_at','desc')->limit(6)->get();
+        
+        // Générer les 10 dernières dates
+        $dates = collect(range(0, 9))
+        ->map(function ($day) {
+            return Carbon::now()->subDays($day)->toDateString();
+        })
+        ->reverse();
 
-        return view('admin.file.dashboard', compact('client','announcer','visit','iyalo','recents'));
+        //CLient
+        $users = User::selectRaw('DATE(created_at) as date, COUNT(*) as total')->whereBetween('created_at', [Carbon::now()->subDays(9), Carbon::now()])->groupBy('date')->where('role','visitor')->get()->keyBy('date');
+        $users = $dates->map(function ($date) use ($users) {
+            return isset($users[$date]->total) ? $users[$date]->total : 0;
+        });
+
+        //Visites
+        $visits = Visit::selectRaw('DATE(created_at) as date, SUM(amount) as total')->whereBetween('created_at', [Carbon::now()->subDays(9), Carbon::now()])->groupBy('date')->get()->keyBy('date');
+        $visits = $dates->map(function ($date) use ($visits) {
+            return isset($visits[$date]->total) ? intval($visits[$date]->total) : 0;
+        });
+
+        $a = $b = $c = array();
+        for($i = 0; $i < 10; $i++){
+            $a = array_merge($a,array($users[$i]));
+            $b = array_merge($b,array($visits[$i]));
+        }
+        $users = json_encode($a);
+        $visits = json_encode($b);
+        // dd($visits);
+
+        return view('admin.file.dashboard', compact('client','announcer','visit','iyalo','recentes','users','visits'));
     }
 
     

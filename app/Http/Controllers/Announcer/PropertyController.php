@@ -294,8 +294,8 @@ class PropertyController extends Controller
     }
 
      /**
-     * List Calendar by Property of Announcer
-     *
+     * List Calendar by Property of Announcer 
+     * 
      * @return \Illuminate\Http\Response
      * 
      */

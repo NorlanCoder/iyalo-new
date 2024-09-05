@@ -57,12 +57,12 @@ Route::group(['middleware' => ['auth']],function () {
     Route::get('/announcers/{user}/properties', [AnnouncerController::class, 'properties'])->name('admin.announcers.properties');
     Route::get('/announcers/{user}/visits', [AnnouncerController::class, 'visits'])->name('admin.announcers.visits');
     Route::get('/announcers/{user}/wallets', [AnnouncerController::class, 'wallets'])->name('admin.announcers.wallets');
+    Route::put('/announcers/{user}/percent', [AnnouncerController::class, 'percent'])->name('admin.announcers.percent');
 
     // Clients
     Route::get('/clients', [ClientController::class, 'index'])->name('admin.clients');
     Route::put('/clients/{user}/action', [ClientController::class, 'action'])->name('admin.clients.action');
     Route::get('/clients/{user}/visits', [ClientController::class, 'visits'])->name('admin.clients.visits');
-
     
     // Admins
     Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories');

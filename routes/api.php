@@ -40,6 +40,7 @@ Route::get('list/category/property/{id}', [CategoryController::class,'listcatego
 Route::get('properties', [VisiteurController::class, 'all_properties'])->name('all_properties');
 Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
 Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
+Route::get('properties/{property}/calendar',[VisiteurController::class,'calendar'])->name('property.calendar');
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('getinfo', [ProfilController::class, 'getinfo'])->name('getinfo');

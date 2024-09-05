@@ -9,6 +9,7 @@ use App\Models\Property;
 use App\Models\User;
 use App\Models\Visit;
 use App\Models\Note;
+use App\Models\Calendar;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -206,6 +207,24 @@ class UserController extends Controller
             DB::rollBack();
             return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
+    }
+
+     /**
+     * List Calendar by Property of User 
+     * 
+     * @unauthenticated
+     * 
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function calendar(Property $property){
+        
+        $calendars = Calendar::where('property_id',$property->id)->paginate(10);
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $calendars
+        ], 200);
     }
        
 
