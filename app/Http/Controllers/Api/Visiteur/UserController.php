@@ -418,7 +418,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      * 
      */
-    public function visits(Property $property){
+    public function visits(){
         
         $visits = Visit::where('user_id',auth()->user()->id)->orderBy('created_at','desc')->paginate(20);
         

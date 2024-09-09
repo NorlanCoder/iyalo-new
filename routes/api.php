@@ -59,6 +59,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('list/favoris/{id}', [VisiteurController::class,'listfavoris'])->name('listfavoris');
 
         // Property
+        Route::get('visit/list', [VisiteurController::class,'visits'])->name('visits');
         Route::put('visit/{visit}/confirm_client', [VisiteurController::class, 'confirm_client'])->name('confirm_client');
         Route::put('visit/{visit}/signal', [VisiteurController::class, 'signal'])->name('signal');
 
