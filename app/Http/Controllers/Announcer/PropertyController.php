@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Note;
 use App\Models\Visit;
 use App\Models\Calendar;
+use App\Models\Notification;
 use App\Models\Property;
 use App\Models\Media;
 
