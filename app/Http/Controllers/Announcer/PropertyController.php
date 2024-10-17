@@ -22,7 +22,7 @@ class PropertyController extends Controller
      * All Properties of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function index(){
 
@@ -50,7 +50,7 @@ class PropertyController extends Controller
      * Specific Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function show(Property $property){
 
@@ -68,9 +68,9 @@ class PropertyController extends Controller
 
     /**
      * Add Property of Announcer
-     * 
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function create(Request $request){
         try {
@@ -98,7 +98,7 @@ class PropertyController extends Controller
                 'images.*' => 'required|file|mimes:jpeg,png,jpg,gif|max:10000',
             ]);
 
-    
+
             if ($validation->fails()) {
                 return response()->json([
                     "message" => $validation->errors(),
@@ -157,7 +157,7 @@ class PropertyController extends Controller
                     'title' => 'Nouvelle propriété disponible' ,
                     'body' => $property->label.' disponible pour '.$property->price.' '.$property->device.'. Les droits de visite élevés à '.$property->visite_price.' '.$property->device,
                 ]);
-                
+
             DB::commit();
 
             return response()->json([
@@ -168,14 +168,14 @@ class PropertyController extends Controller
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
-    
+
     }
 
     /**
      * Update Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function update(Request $request, Property $property){
         try {
@@ -202,7 +202,7 @@ class PropertyController extends Controller
                 'images.*' => 'max:10000',
 
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json([
                     "message" => $validation->errors(),
@@ -219,7 +219,7 @@ class PropertyController extends Controller
                     $filename = time().'-'.$extension;
                     $cover->move('uploads', $filename);
                     $cover_url = 'uploads/'.$filename;
-                }else 
+                }else
                     $cover_url = $property->cover_url;
 
                 $property->update([
@@ -272,17 +272,17 @@ class PropertyController extends Controller
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
-    
+
     }
 
     /**
      * Active/Disactive Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function action(Property $property){
-        
+
         $property->update([
             'status' => $property->status ? false : true,
         ]);
@@ -295,13 +295,13 @@ class PropertyController extends Controller
     }
 
      /**
-     * List Calendar by Property of Announcer 
-     * 
+     * List Calendar by Property of Announcer
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function calendar(Property $property){
-        
+
         $calendars = Calendar::where('property_id',$property->id)->paginate(10);
 
         return response()->json([
@@ -315,17 +315,17 @@ class PropertyController extends Controller
      * Add Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function add_calendar(Request $request, Property $property){
         try {
-            
+
             $validation = Validator::make($request->all(), [
                 'day'  => 'required|array',
                 'hour_start'  => 'required',
                 'hour_end'  => 'required',
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json([
                     "message" => $validation->errors(),
@@ -348,27 +348,27 @@ class PropertyController extends Controller
                 "message" => 'Successfull',
                 "status" => 200,
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
     }
-    
+
      /**
      * Update Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function update_calendar(Request $request, Calendar $calendar){
         try {
-            
+
             $validation = Validator::make($request->all(), [
                 'day'  => 'required',
                 'hour_start'  => 'required',
                 'hour_end'  => 'required',
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json([
                     "message" => $validation->errors(),
@@ -390,21 +390,21 @@ class PropertyController extends Controller
                 "message" => 'Successfull',
                 "status" => 200,
             ]);
-            
+
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
-    }   
+    }
 
      /**
      * Delete Calendar by Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function delete_calendar(Request $request, Calendar $calendar){
-        
-        $calendar->detete();
+
+        $calendar->delete();
 
         return response()->json([
             'message' => 'Success',
@@ -415,12 +415,12 @@ class PropertyController extends Controller
      * List Note by Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function notes(Property $property){
-        
+
         $notes = Note::where('property_id',$property->id)->orderBy('created_at','desc')->paginate(10);
-        
+
         return response()->json([
             'status' => 200,
             'data' => $notes
@@ -432,15 +432,15 @@ class PropertyController extends Controller
      * List Visit by Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function visits(Property $property){
-        
+
         $visits = Visit::where('property_id',$property->id)->orderBy('created_at','desc')->paginate(10);
-        
+
         $all_cash = Visit::where('property_id',$property->id)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$property->id)->sum('free');
         $pending = Visit::where('property_id',$property->id)->where('visited',false)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$property->id)->where('visited',false)->where('is_refund',false)->sum('free');
-        
+
         $cash = $all_cash - $pending;
 
         return response()->json([
@@ -456,16 +456,16 @@ class PropertyController extends Controller
      * Mask visit by Property of Announcer
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function confirm_owner(Visit $visit){
-        
+
         $visit->update([
             'confirm_owner'=> true,
             'visited' => $visit->confirm_client ? true : $visit->visited
         ]);
 
-        if($visit->visited)  
+        if($visit->visited)
             $pushnotif = $this->sendNotificationVisit($visit->property->user->id,'Confirmation de Visite', $visit->user->name.' a confirmé que la réservation pour la visite de '.$visit->property->label.' a eu lieu. Veuillez consulter votre compte pour entrer en possession de vos fonds. Montant '.($visit->amount - $visit->free).' '.$visit->property->device);
 
         return response()->json([
