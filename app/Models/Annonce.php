@@ -10,10 +10,19 @@ class Annonce extends Model
     use HasFactory;
 
     protected $fillable = [
-        'label',
-        'cover_url',
-        'describ',
-        'is_active',
-    ];
+        'title',
+        'type',
+        'agencename',
+        'adresse',
+        'image',
+        'active',
+        'description',
+        'user_id',
+     ];
+ 
+     public function user()
+     {
+         return $this->belongsTo('App\Models\User');
+     }
     
 }

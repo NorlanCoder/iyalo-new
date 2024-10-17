@@ -15,6 +15,32 @@ class WithdrawController extends Controller
 {
 
     /**
+     * Bilan Global
+     * 
+     * Recap des différentes bilans
+     *
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function bilan(){
+        $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
+        $visits = Visit::where('property_id',auth()->user()->id)->count();
+
+        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
+
+        $withdrawal = Withdraw::where('user_id',auth()->user()->id)->sum('amount');
+        $wallet = $cash - $withdrawal;
+
+        return response()->json([
+            'status' => 200,
+            'properties' => count($properties),
+            'visits' => $visits,
+            'all_cash' => $cash,
+            'wallet' => $wallet,
+        ]);
+    }
+
+    /**
      * History Withdraw  of Announcer
      *
      * @return \Illuminate\Http\Response

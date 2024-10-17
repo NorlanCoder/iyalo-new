@@ -89,6 +89,15 @@
                 <span class="hide-menu">Notes</span>
               </a>
             </li>
+            
+            <li class="sidebar-item">
+              <a class="sidebar-link  @yield('annonces')" href="{{route('admin.annonces')}}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-message"></i>
+                </span>
+                <span class="hide-menu">Annonces</span>
+              </a>
+            </li>
             <li class="sidebar-item ">
               <a class="sidebar-link text-danger" href="{{ route('auth.logout') }}" aria-expanded="false">
                 <span>

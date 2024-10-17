@@ -10,7 +10,7 @@ class Calendar extends Model
     use HasFactory;
 
     protected $fillable = [
-        'porperty_id',
+        'property_id',
         'day',
         'hour',
     ];

@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-
     public function index(Request $request){
         $q = $request->q ? : '';
         $users = User::where('id','!=',auth()->user()->id)->where('role','admin')      
@@ -24,7 +23,6 @@ class AdminController extends Controller
 
         return view('admin.file.admins.index',compact('users','q'));
     }
-
 
     public function create(Request $request){
     

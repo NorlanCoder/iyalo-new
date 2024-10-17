@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\VisitController;
 use App\Http\Controllers\Admin\WithdrawController;
+use App\Http\Controllers\Admin\AnnonceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -83,6 +84,11 @@ Route::group(['middleware' => ['auth']],function () {
     Route::get('/withdraws', [WithdrawController::class, 'index'])->name('admin.withdraws');
     Route::put('/withdraws/{withdraw}/check', [WithdrawController::class, 'check'])->name('admin.withdraws.check');
 
+    // Annonces
+    Route::get('/annonces', [AnnonceController::class, 'index'])->name('admin.annonces');
+    Route::post('/annonces/create', [AnnonceController::class, 'create'])->name('admin.annonces.create');
+    Route::put('/annonces/{annonce}/update', [AnnonceController::class, 'update'])->name('admin.annonces.update');
+    Route::put('/annonces/{annonce}/action', [AnnonceController::class, 'action'])->name('admin.annonces.action');
 
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 });

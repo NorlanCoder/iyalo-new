@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Visit;
 use App\Models\Note;
 use App\Models\Calendar;
+use App\Models\Annonce;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -505,6 +506,45 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
+        }
+    }
+    /**
+     * All Annonces with (serach bar) 
+     *
+     * Cette route est à utiliser pour la page de recherche généraliser avec en parametre <b> search </b>
+     *
+     * @unauthenticated
+     * @return \Illuminate\Http\Response
+     *
+     */
+    public function annonces(Request $request) {
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'search' => 'string'
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+            }
+
+            $search = $request->search ?? '';
+
+            $annonces = Annonce::where('active',true)     
+                ->where(function ($query) use ($search) {
+                    $query->where(DB::raw('lower(title)'),'like','%'.strtolower($search).'%')
+                        ->orwhere(DB::raw('lower(type)'),'like','%'.strtolower($search).'%')
+                        ->orwhere(DB::raw('lower(description)'),'like','%'.strtolower($search).'%')
+                        ->orwhere(DB::raw('lower(adresse)'),'like','%'.strtolower($search).'%');
+            })->orderBy('created_at','desc')->paginate(20);
+            
+            return response()->json([
+                'status' => 200,
+                'data' => $annonces,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
     }
 

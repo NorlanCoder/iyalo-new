@@ -35,8 +35,10 @@ class ProfilController extends Controller
      * 
      */
     public function history(){
-
-        $notifications = Notification::where('user_id',auth()->user()->id)->get();
+        if(auth()->user()->role == 'visitor')
+            $notifications = Notification::whereNull('user_id')->get();
+        else
+            $notifications = Notification::where('user_id',auth()->user()->id)->get();
     
         return response()->json([
             'status' => 200,

@@ -37,6 +37,8 @@ Route::post('reset', [AuthController::class, 'reset'])->name('reset');
 Route::get('list/category', [CategoryController::class,'listcategory'])->name('listcategory');
 Route::get('list/category/property/{id}', [CategoryController::class,'listcategoryproperty'])->name('listcategoryproperty');
 
+Route::get('annonces',[VisiteurController::class,'annonces'])->name('annonces');
+
 Route::get('properties', [VisiteurController::class, 'all_properties'])->name('all_properties');
 Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
 Route::get('details/properties/{id}',[VisiteurController::class,'detailsproperties'])->name('detailsproperties');
@@ -62,7 +64,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('visit/list', [VisiteurController::class,'visits'])->name('visits');
         Route::put('visit/{visit}/confirm_client', [VisiteurController::class, 'confirm_client'])->name('confirm_client');
         Route::put('visit/{visit}/signal', [VisiteurController::class, 'signal'])->name('signal');
-
         Route::post('note/{property}',[VisiteurController::class,'note'])->name('note');
 
 
@@ -88,6 +89,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         // Withdraw
         Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
+        Route::get('announcer/withdraw/checkout', [WithdrawController::class, 'history'])->name('announcer.withdraw.checkout');
+        Route::get('announcer/withdraw/bilan', [WithdrawController::class, 'bilan'])->name('announcer.withdraw.bilan');
         Route::post('announcer/withdraw/create', [WithdrawController::class, 'create'])->name('announcer.withdraw.create');
     });
 
