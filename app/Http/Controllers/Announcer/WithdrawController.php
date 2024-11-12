@@ -24,9 +24,9 @@ class WithdrawController extends Controller
      */
     public function bilan(){
         $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
-        $visits = Visit::where('property_id',auth()->user()->id)->count();
+        $visits = Visit::whereIn('property_id',$properties)->count();
 
-        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
+        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
 
         $withdrawal = Withdraw::where('user_id',auth()->user()->id)->sum('amount');
         $wallet = $cash - $withdrawal;
@@ -49,7 +49,7 @@ class WithdrawController extends Controller
     public function index(){
         $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
 
-        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::where('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
+        $cash = Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('amount') - Visit::whereIn('property_id',$properties)->where('visited',true)->where('is_refund',false)->sum('free');
 
         $withdrawal = Withdraw::where('user_id',auth()->user()->id)->sum('amount');
         $wallet = $cash - $withdrawal;
