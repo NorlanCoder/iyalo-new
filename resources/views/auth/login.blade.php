@@ -5,7 +5,7 @@
 @section('body')
 
   <div class="card-body">
-    
+
     <div class="brand-wrapper" style="font-size:1.5em">
       @if (Session::get('danger'))
         <div class="alert alert-danger">
@@ -20,7 +20,7 @@
     </div>
 
     <a href="{{ asset('') }}" class="text-nowrap logo-img text-center d-block py-3 w-100">
-      <img src="{{asset('admin/images/logos/dark-logo.svg')}}" width="180" alt="">
+      <img src="{{asset('logo.png')}}" width="180" alt="">
     </a>
     <p class="text-center">Espace de connexion pour tous les utilisateurs</p>
     <form action="{{route('auth.check')}}" method="post">
@@ -44,7 +44,7 @@
         </div>
         <a class="text-primary fw-bold" href="{{route('auth.forget')}}">Mot de passe oublié ?</a>
       </div>
-      <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Se Connecter</button>
+      <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" style="background-color: #00ddb3; border-color: #00ddb3">Se Connecter</button>
       <div class="d-flex align-items-center justify-content-center">
         <p class="fs-4 mb-0 fw-bold">Vous avez pas de compte?</p>
       </div>
