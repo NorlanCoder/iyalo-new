@@ -55,8 +55,19 @@ class UserController extends Controller
 
             if(empty($user)) return response()->json(['message' => 'Cet utilisateur n\'existe pas', 'status' => 404], 404);
 
+            $ids = Favory::where('user_id',$id)->pluck('property_id');
+            $properties = Property::whereIn('id',$ids)->get();
+
+            $properties->map(function ($query) {
+                $query->media = $query->media($query->id);
+                $query->user;
+                $query->note = Note::where('property_id', $query->id)->get();
+                $query->category;
+                return $query;
+            });
+
             // Récupérer toutes les favoris de cet utilisateur
-            $properties = $user->favoriteProperties;
+            // $properties = $user->favoriteProperties;
 
             return response()->json(['data' => $properties, 'status' => 200], 200);
         } catch (\Exception $e) {
@@ -119,11 +130,12 @@ class UserController extends Controller
 
             $validation = Validator::make($request->all(), [
                 'category_id' => '',
-                'room' => '',
-                'bathroom' => '',
-                'min_price' => '',
-                'max_price' => '',
+                'room' => 'integer',
+                'bathroom' => 'integer',
+                'min_price' => 'integer',
+                'max_price' => 'integer',
                 'search' => '',
+                'swingpool' => 'integer',
             ]);
 
             if ($validation->fails()) {
@@ -135,6 +147,7 @@ class UserController extends Controller
                 ->where(DB::raw('lower(city)'),'like',['%'.mb_strtolower($request->search).'%'])
                 ->where('room','>=',$request->room ?: 0 )
                 ->where('bathroom','>=',$request->bathroom ?: 0)
+                ->where('swingpool',$request->swingpool ?: null)
                 ->whereBetween('price',[$request->min_price ?: 0,$request->max_price ?: 999999999]);
                 
             if($request->category_id)
