@@ -94,7 +94,7 @@ class ProfilController extends Controller
             ], 400);
         }
 
-        if($request->image){
+        if($request->hasFile('image')){
             $cover = $request->image;
             $extension = $cover->getClientOriginalName();
             $filename = time().'-'.$extension;
