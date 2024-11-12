@@ -336,7 +336,12 @@ class PropertyController extends Controller
                 'start' => $request->hour_start,
                 'end' => $request->hour_end,
             ];
+
             foreach ($request->day as $day) {
+                $exist = Calendar::where(['day' => $day, 'property_id' => $property->id])->first();
+                if($exist){
+                    $exist->delete();
+                }
                 $calendar = Calendar::create([
                     'day'  => $day,
                     'property_id'  => $property->id,
