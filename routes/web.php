@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth']],function () {
     // Clients
     Route::get('/clients', [ClientController::class, 'index'])->name('admin.clients');
     Route::put('/clients/{user}/action', [ClientController::class, 'action'])->name('admin.clients.action');
+    Route::put('/clients/{user}/become', [ClientController::class, 'become'])->name('admin.clients.become');
     Route::get('/clients/{user}/visits', [ClientController::class, 'visits'])->name('admin.clients.visits');
     
     // Admins

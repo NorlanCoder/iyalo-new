@@ -13,6 +13,7 @@ use App\Models\Calendar;
 use App\Models\Annonce;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use App\Service\MailService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -252,7 +253,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      *
      */
-    public function askvisit(Request $request){
+    public function askvisit(Request $request, MailService $mailer){
 
         try {
             // dd($request->id);
@@ -293,6 +294,13 @@ class UserController extends Controller
             // if(!$pushnotif)
             //     return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 
+            
+            // Client
+            $mailer->contactMail(null, $user->email,'Réservation pour visite', $user->name.' vous venez de faire une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device.' le '.$visit->date_visite, 'Réservation pour visite de '.$property->label);
+
+            // Proprio
+            $mailer->contactMail(null, $property->user->email,'Programation de Visite', $user->name.' a fait une  résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device.' le '.$visit->date_visite.'<br> Merci de vous connecter pour plus d\'information', 'Réservation pour visite de '.$property->label.' le '.$visit->date_visite);
+
             return 'approuved';
 
         } catch (\Exception $e) {
@@ -310,7 +318,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      *
      */
-    public function askvisit_webhook(Request $request){
+    public function askvisit_webhook(Request $request, MailService $mailer){
 
         $endpoint_secret = config('fedapay.webhook_visit');
 
@@ -379,6 +387,12 @@ class UserController extends Controller
             $property = Property::find($req->property_id);
 
             $pushnotif = $this->sendNotificationVisit($property->user->id,'Réservation pour visite', auth()->user()->name.' a fait une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
+            // Client
+            $mailer->contactMail(null, auth()->user()->email,'Réservation pour visite', auth()->user()->name.' vous venez de faire une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device.' le '.$date_visite, 'Réservation pour visite de '.$property->label);
+
+            // Proprio
+            $mailer->contactMail(null, $property->user->email,'Programation de Visite', auth()->user()->name.' a fait une  résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device.' le '.$date_visite.'<br> Merci de vous connecter pour plus d\'information', 'Réservation pour visite de '.$property->label.' le '.$date_visite);
+
             if(!$pushnotif)
                 return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 

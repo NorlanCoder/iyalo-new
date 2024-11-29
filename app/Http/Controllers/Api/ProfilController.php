@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Property;
+use App\Service\MailService;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -215,16 +216,14 @@ class ProfilController extends Controller
 
     /**
      * Became Announcer
-     *
-     * @return \Illuminate\Http\Response
-     * 
+     *     * 
      */
-    public function became_announcer(Request $request){
+    public function became_announcer(Request $request, MailService $mailer){
 
         $validation = Validator::make($request->all(), [
             'adress' => 'required',
-            'card' => 'required|max:10000',
-            'logo' => 'required|max:10000'
+            'card' => 'required|max:5000',
+            'logo' => 'required|max:5000'
         ]);
         if ($validation->fails()) {
             return response()->json([
@@ -254,18 +253,21 @@ class ProfilController extends Controller
             }
             $user = User::where('id', auth()->user()->id)->first();
             $user->update([
-                'role' => 'announcer',
+                // 'role' => 'announcer',
                 'adress' => $request->adress,
                 'card_url' => $card_url,
                 'logo' => $logo_url
             ]);
+            // $user->tokens()->delete();
 
-            $user->tokens()->delete();
         DB::commit();
+
+        
+        $mailer->contactMail(null, "fabienamoussou20062001@gmail.com",'Demande pour devenir Annonceur', $user->name.' a fait une  demande afin pour de devenir annonceur <br> Merci de vous connecter pour plus d\'information', 'Demande pour devenir Annonceur');
 
         return response()->json([
             'status' => 200,
-            'message' => 'Vous êtes maintenant un Annonceur',
+            'message' => 'Votre demande est en cours de traitement',
         ], 200);
     }
 

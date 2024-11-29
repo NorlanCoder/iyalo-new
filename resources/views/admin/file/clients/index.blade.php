@@ -52,6 +52,9 @@
                                             <img src="{{asset($user->image_url ?: 'uploads/profil/user-1.jpg')}}" width="45"
                                             class="rounded-circle" />
                                             <h6 class="mb-0 text-center"> {{ $user->name }} </h6>
+                                            @if($user->adress)
+                                                <a type="button"  data-bs-toggle="modal" title="Devenir Annonceur" data-bs-target="#become{{$user->id}}" class="btn btn-warning"><i class="ti ti-home"></i></a>
+                                            @endif
                                         </div>
                                     </td>
                                     <td> {{ $user->email }} </td>

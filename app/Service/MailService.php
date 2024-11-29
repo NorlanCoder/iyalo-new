@@ -57,7 +57,7 @@ class MailService{
             throw new \Exception("Must have a sender or a receiver", 1);
         }
         
-        $this->mailer::send('emails.contact', [ 'data' => $message ], function($mail) use($sender, $receiver, $header, $object) {
+        $this->mailer::send('emails.contact', [ 'data' => $message, 'title'=>$header ], function($mail) use($sender, $receiver, $header, $object) {
             $mail->from($sender, $header);
             $mail->to($receiver)->subject($object);
         });

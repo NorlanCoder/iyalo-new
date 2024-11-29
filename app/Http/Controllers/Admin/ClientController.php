@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Service\MailService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,17 @@ class ClientController extends Controller
         $user->update([
             'status' => $user->status ? false : true,
         ]);
+
+        return back()->with('success','Succès');
+    }
+
+    public function become(User $user, Request $request, MailService $mailer){
+        
+        $user->update([
+            'role' => "announcer",
+        ]);
+
+        $mailer->contactMail(null, $user->email,'Confirmation de Demande', $user->name.' votre demande pour devenir un annonceur a été validé avec succès vous pouvez maintenant faire des annonces concernant vos propritétés <br> Merci de vous connecter pour plus d\'information', 'Approbation de demande pour devenir un Annonceur');
 
         return back()->with('success','Succès');
     }
