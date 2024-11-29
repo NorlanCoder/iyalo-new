@@ -18,25 +18,25 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    
+
     public function getDateForDayOfWeek($targetDay) {
         // Récupérer le jour de la semaine actuel (0 = dimanche, 6 = samedi)
         $currentDay = date('w');
-    
+
         // Convertir les jours en nombres si nécessaire (par exemple, si $targetDay est une chaîne)
         $targetDay = strtolower($targetDay);
         $daysOfWeek = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
         $targetDayNumber = array_search($targetDay, $daysOfWeek);
-    
+
         // Calculer la différence de jours
         $diff = $targetDayNumber - $currentDay;
-    
+
         // Créer un objet DateTime représentant la date du jour
         $date = new \DateTime();
-    
+
         // Ajouter ou soustraire le nombre de jours nécessaire
         $date->modify($diff . ' days');
-    
+
         // Formater la date selon vos besoins
         return $date->format('Y-m-d'); // Format AAAA-MM-JJ
     }
@@ -45,7 +45,7 @@ class UserController extends Controller
      * List User Favoris of User
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function listfavoris(Request $request, $id) {
         try {
@@ -80,7 +80,7 @@ class UserController extends Controller
      * Add / Delete Favories of User
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function togglefavoris(Request $request, $iduser, $idproperty) {
         try {
@@ -115,14 +115,14 @@ class UserController extends Controller
         }
     }
 
-    
+
     /**
      * All Properties of User
      *
      * @unauthenticated
-     * 
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function all_properties(Request $request){
 
@@ -149,12 +149,12 @@ class UserController extends Controller
                 ->where('bathroom','>=',$request->bathroom ?: 0)
                 ->where('swingpool',$request->swingpool ?: null)
                 ->whereBetween('price',[$request->min_price ?: 0,$request->max_price ?: 999999999]);
-                
+
             if($request->category_id)
                 $properties = $properties->where('category_id',$request->category_id)->orderBy('created_at','desc')->paginate(10);
-            else 
+            else
                 $properties = $properties->orderBy('created_at','desc')->paginate(10);
-    
+
             $properties->map(function ($query) {
                 $query->media = $query->media($query->id);
                 $query->user;
@@ -162,7 +162,7 @@ class UserController extends Controller
                 $query->category;
                 return $query;
             });
-            
+
             return response()->json([
                 'status' => 200,
                 'data' => $properties,
@@ -178,9 +178,9 @@ class UserController extends Controller
      * List last 10 properties of User
      *
      * @unauthenticated
-     * 
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function lastproperties(Request $request) {
         try {
@@ -203,9 +203,9 @@ class UserController extends Controller
      * Détails property of User
      *
      * @unauthenticated
-     * 
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function detailsproperties(Request $request, $id) {
         try {
@@ -224,15 +224,15 @@ class UserController extends Controller
     }
 
      /**
-     * List Calendar by Property of User 
-     * 
+     * List Calendar by Property of User
+     *
      * @unauthenticated
-     * 
+     *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function calendar(Property $property){
-        
+
         $calendars = Calendar::where('property_id',$property->id)->paginate(10);
 
         return response()->json([
@@ -240,30 +240,31 @@ class UserController extends Controller
             'data' => $calendars
         ], 200);
     }
-       
+
 
     /**
      * Ask visit of User
-     * 
+     *
      * @unauthenticated
-     * 
+     *
      * Faire le paiement via Fedapay par Callback. Il faut mettre dans le customer_metadata les variables <b> user_id, proprety_id, day, hour </b>
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function askvisit(Request $request){
-        
+
         try {
             // dd($request->id);
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer sk_sandbox_ricGepZOgS0u4YviGOnarIPc',
+                'Authorization' => 'Bearer sk_sandbox_xD-eXmwB90F2Ih6PWATQKnLb',
                 'Content-Type' => 'application/json',
             ])->get('https://sandbox-api.fedapay.com/v1/transactions/'.$request->id);
-            
+
             $data = $response->json()["v1/transaction"];
 
+            // return $data;
             // Gestion de la réponse
             if (!$response->successful()) {
                 return response()->json(['error' => 'Erreur lors de la récupération de la transaction'], 500);
@@ -272,12 +273,12 @@ class UserController extends Controller
             $user = User::find($data['custom_metadata']['user_id']);
 
 
-            $dateCible = $this->getDateForDayOfWeek($data['custom_metadata']['day']);
-            $dateString = $dateCible.' '.$data['custom_metadata']['hour'];
-            $date_visite = new \DateTime($dateString);
+            // $dateCible = $this->getDateForDayOfWeek($data['custom_metadata']['day']);
+            // $dateString = $dateCible.' '.$data['custom_metadata']['hour'];
+            // $date_visite = new \DateTime($dateString);
 
             $visit = Visit::create([
-                'date_visite' => $date_visite,
+                'date_visite' => now(),
                 'amount' => $data['amount'],
                 'free' => ($property->user->free * $data['amount'])/100,
                 'type' => 'fedapay',
@@ -288,7 +289,7 @@ class UserController extends Controller
 
             // $pushnotif = new NotificationService();
             // $pushnotif->sendNotificationVisit($property->user->id,'Réservation pour visite', $user->name.' a fait une réservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
-            
+
             // if(!$pushnotif)
             //     return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 
@@ -298,18 +299,18 @@ class UserController extends Controller
             return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
         }
     }
-    
+
     /**
      * Fedapay Webhook Visit of User
-     * 
+     *
      * @unauthenticated
-     * 
+     *
      * Fedapay Webhook for asking visit
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
-    public function askvisit_webhook(Request $request){ 
+    public function askvisit_webhook(Request $request){
 
         $endpoint_secret = config('fedapay.webhook_visit');
 
@@ -322,7 +323,7 @@ class UserController extends Controller
             'property_id' => '',
             'user_id' => '',
         ]);
-        $payload = @file_get_contents('php://input'); 
+        $payload = @file_get_contents('php://input');
         $sig_header = $_SERVER['HTTP_X_FEDAPAY_SIGNATURE'];
         $feda = null;
 
@@ -336,7 +337,7 @@ class UserController extends Controller
             );
         } catch(\UnexpectedValueException $e) {
             // Invalid payload
-            
+
             return response()->json([
                 "message" => 'Error1',
                 "status" => 400,
@@ -358,8 +359,8 @@ class UserController extends Controller
 
         $req = $feda->entity->custom_metadata;
         // Handle the event
-        if($feda->name == 'transaction.approved'){ 
-            
+        if($feda->name == 'transaction.approved'){
+
             $dateCible = $this->getDateForDayOfWeek($req->day);
             $dateString = $dateCible.' '.$req->hour;
             $date_visite = new \DateTime($dateString);
@@ -376,7 +377,7 @@ class UserController extends Controller
                 'transaction' => $feda,
             ]);
             $property = Property::find($req->property_id);
-            
+
             $pushnotif = $this->sendNotificationVisit($property->user->id,'Réservation pour visite', auth()->user()->name.' a fait une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device);
             if(!$pushnotif)
                 return response()->json(["errors" => 'Push Error', "status" => 400], 400);
@@ -393,12 +394,12 @@ class UserController extends Controller
      * Leave a note of User
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function note(Request $request, Property $property){
-    
+
         try {
-            
+
             $validation = Validator::make($request->all(), [
                 'note' => 'required',
                 'comment' => 'required',
@@ -430,12 +431,12 @@ class UserController extends Controller
      * All list Visit of user
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function visits(){
-        
+
         $visits = Visit::where('user_id',auth()->user()->id)->orderBy('created_at','desc')->paginate(20);
-        
+
         return response()->json([
             'status' => 200,
             'data' => $visits
@@ -444,21 +445,21 @@ class UserController extends Controller
 
     /**
      * Mask visit by Visitor of User
-     * 
+     *
      * Cette action permet de confirmer que le client a bien pu faire la visite
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function confirm_client(Visit $visit){
-        
+
         $visit->update([
             'confirm_client'=> true,
             'describ' => "J'ai pu faire ma visite.",
             'visited' => $visit->confirm_owner ? true : $visit->visited,
         ]);
 
-        if($visit->visited)  
+        if($visit->visited)
             $pushnotif = $this->sendNotificationVisit($visit->property->user->id,'Confirmation de Visite', $visit->user->name.' a confirmé que la réservation pour la visite de '.$visit->property->label.' a eu lieu. Veuillez consulter votre compte pour entrer en possession de vos fonds. Montant '.($visit->amount - $visit->free).' '.$visit->property->device);
 
         return response()->json([
@@ -471,11 +472,11 @@ class UserController extends Controller
      * Signal a visit of User
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function signal(Request $request,Visit $visit){
         try {
-            
+
             $validation = Validator::make($request->all(), [
                 'describ' => 'required',
             ]);
@@ -484,9 +485,8 @@ class UserController extends Controller
                 return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
-            $visit = Visit::create([
-                'describ' => $request->describ,
-            ]);
+            $visit->describ = $request->describ;
+            $visit->save();
 
             return response()->json([
                 "message" => 'Successfull',
@@ -502,11 +502,11 @@ class UserController extends Controller
      * Refund cash a visit of User
      *
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function refund(Request $request,Visit $visit){
         try {
-            
+
             $visit = Visit::create([
                 'describ' => 'Fonds remboursé au client.',
                 'is_refund' => true,
@@ -522,7 +522,7 @@ class UserController extends Controller
         }
     }
     /**
-     * All Annonces with (serach bar) 
+     * All Annonces with (serach bar)
      *
      * Cette route est à utiliser pour la page de recherche généraliser avec en parametre <b> search </b>
      *
@@ -543,14 +543,14 @@ class UserController extends Controller
 
             $search = $request->search ?? '';
 
-            $annonces = Annonce::where('active',true)     
+            $annonces = Annonce::where('active',true)
                 ->where(function ($query) use ($search) {
                     $query->where(DB::raw('lower(title)'),'like','%'.strtolower($search).'%')
                         ->orwhere(DB::raw('lower(type)'),'like','%'.strtolower($search).'%')
                         ->orwhere(DB::raw('lower(description)'),'like','%'.strtolower($search).'%')
                         ->orwhere(DB::raw('lower(adresse)'),'like','%'.strtolower($search).'%');
             })->orderBy('created_at','desc')->paginate(20);
-            
+
             return response()->json([
                 'status' => 200,
                 'data' => $annonces,

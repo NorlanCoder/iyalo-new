@@ -24,7 +24,7 @@ use App\Http\Controllers\Announcer\WithdrawController;
 |
 */
 
-Route::get('visit/callback',[VisiteurController::class,'askvisit'])->name('askvisit');
+Route::post('visit/callback',[VisiteurController::class,'askvisit'])->name('askvisit');
 Route::post('visit/fedapay',[VisiteurController::class,'askvisit_webhook'])->name('askvisit_webhook');
 
 Route::post('register', [AuthController::class, 'register'])->name('register');
@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('update_info', [ProfilController::class, 'update_info'])->name('update_info');
     Route::put('update_pass', [ProfilController::class, 'update_pass'])->name('update_pass');
     Route::delete('logout', [ProfilController::class, 'logout'])->name('logout');
-    
+
     Route::middleware(['visitor'])->group(function () {
         Route::put('became_announcer', [ProfilController::class, 'became_announcer'])->name('became_announcer');
 
@@ -90,7 +90,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Withdraw
         Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
         Route::get('announcer/withdraw/checkout', [WithdrawController::class, 'history'])->name('announcer.withdraw.checkout');
-        Route::get('announcer/withdraw/bilan', [WithdrawController::class, 'bilan'])->name('announcer.withdraw.bilan'); 
+        Route::get('announcer/withdraw/bilan', [WithdrawController::class, 'bilan'])->name('announcer.withdraw.bilan');
         Route::post('announcer/withdraw/create', [WithdrawController::class, 'create'])->name('announcer.withdraw.create');
     });
 
