@@ -88,7 +88,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('announcer/property/{property}/notes', [PropertyController::class, 'notes'])->name('announcer.property.notes');
 
         // Withdraw
-        Route::get('announcer/withdraw/', [WithdrawController::class, 'index'])->name('announcer.withdraw');
+        Route::get('announcer/withdraw', [WithdrawController::class, 'index'])->name('announcer.withdraw');
         Route::get('announcer/withdraw/checkout', [WithdrawController::class, 'history'])->name('announcer.withdraw.checkout');
         Route::get('announcer/withdraw/bilan', [WithdrawController::class, 'bilan'])->name('announcer.withdraw.bilan');
         Route::post('announcer/withdraw/create', [WithdrawController::class, 'create'])->name('announcer.withdraw.create');

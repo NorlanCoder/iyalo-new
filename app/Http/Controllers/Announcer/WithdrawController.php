@@ -53,7 +53,7 @@ class WithdrawController extends Controller
     {
         $properties = Property::where('user_id', auth()->user()->id)->pluck('id');
 
-        $cash = Visit::whereIn('property_id', $properties)->where('visited', true)->whereIn('is_refund', false)->sum('amount') - Visit::whereIn('property_id', $properties)->where('visited', true)->where('is_refund', false)->sum('free');
+        $cash = Visit::whereIn('property_id', $properties)->where('visited', true)->where('is_refund', false)->sum('amount') - Visit::whereIn('property_id', $properties)->where('visited', true)->where('is_refund', false)->sum('free');
 
         $withdrawal = Withdraw::where('user_id', auth()->user()->id)->sum('amount');
         $wallet = $cash - $withdrawal;
