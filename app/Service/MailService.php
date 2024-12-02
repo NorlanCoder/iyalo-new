@@ -39,7 +39,7 @@ class MailService{
     }
 
     public function passwordMail($token, $email){
-        $message = 'Veuillez <a href="'.$url.'">cliquer ici</a> pour réinitialiser votre mot passe.';
+        $message = "The activation token is : ".$token;
         $this->mailer::send('emails.token', [
             'data' => $message
         ], function($message)use ($email){
