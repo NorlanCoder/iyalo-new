@@ -457,6 +457,18 @@ class PropertyController extends Controller
         ]);
     }
 
+    public function all_visits(){
+
+        $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
+
+        $visits = Visit::wherein('property_id',$properties)->orderBy('created_at','desc')->paginate(10);
+
+        return response()->json([
+            'status' => 200,
+            'data' => $visits
+        ]);
+    }
+
     /**
      * Mask visit by Property of Announcer
      *

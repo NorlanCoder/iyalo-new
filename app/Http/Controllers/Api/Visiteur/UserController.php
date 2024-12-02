@@ -18,6 +18,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use App\Models\Country;
+use App\Models\State;
+use App\Models\City;
+
 class UserController extends Controller
 {
 
@@ -41,6 +45,25 @@ class UserController extends Controller
 
         // Formater la date selon vos besoins
         return $date->format('Y-m-d'); // Format AAAA-MM-JJ
+    }
+
+    //Favoris
+    /**
+     * List City
+     * @unauthenticated
+     *
+     * @return \Illuminate\Http\Response
+     *
+     */
+    public function city(Request $request){
+        $benin = Country::where('name', 'benin')->first();
+
+        $states = State::where('country_id', $benin->id)->pluck('id');
+
+        // Get Cities in Benin
+        $cities = City::whereIn('state_id', $states)->orderBy('name','asc')->get();
+
+        return response()->json(['data' => $cities, 'status' => 200], 200);
     }
     //Favoris
     /**

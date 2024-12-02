@@ -39,6 +39,7 @@ Route::get('list/category/property/{id}', [CategoryController::class,'listcatego
 
 Route::get('annonces',[VisiteurController::class,'annonces'])->name('annonces');
 
+Route::get('city', [VisiteurController::class, 'city'])->name('city');
 Route::get('properties', [VisiteurController::class, 'all_properties'])->name('all_properties');
 Route::get('map_properties', [VisiteurController::class, 'map_properties'])->name('map_properties');
 Route::get('list/last/properties',[VisiteurController::class,'lastproperties'])->name('lastproperties');
