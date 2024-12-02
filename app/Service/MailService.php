@@ -48,6 +48,16 @@ class MailService{
         });
     }
 
+    // public function passwordMail($url, $email){
+    //     $message = 'Veuillez <a href="'.$url.'">cliquer ici</a> pour réinitialiser votre mot passe.';
+    //     $this->mailer::send('emails.token', [
+    //         'data' => $message
+    //     ], function($message)use ($email){
+    //         $message->from( $this->adminMail, 'Mot de passe oublié');
+    //         $message->to($email)->subject('Réinitialisation de mot de passe');
+    //     });
+    // }
+
     public function contactMail(String $sender = null, String $receiver = null, String $header, String $message, String $object)
     {
         if ($sender == null && $receiver) {
