@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Http;
 use App\Service\MailService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -197,7 +198,7 @@ class UserController extends Controller
             }
 
 
-            $properties = Property::selectRaw('*, ( 6371 * acos( cos( radians(' . $request->lat . ') ) * cos( radians( lat ) ) * cos( radians( long ) - radians(' . $request->long . ') ) + sin( radians(' . $request->lat . ') ) * sin( radians( lat ) ) ) ) AS distance')  
+            $properties = Property::selectRaw('*, ( 6371 * acos( cos( radians(' . $request->lat . ') ) * cos( radians( lat ) ) * cos( radians( long ) - radians(' . $request->long . ') ) + sin( radians(' . $request->lat . ') ) * sin( radians( lat ) ) ) ) AS distance')
 
                     ->having('distance', '<', $request->distance)
                     ->orderBy('created_at','desc')->paginate(10);
@@ -320,9 +321,11 @@ class UserController extends Controller
             $user = User::find($data['custom_metadata']['user_id']);
 
 
-            // $dateCible = $this->getDateForDayOfWeek($data['custom_metadata']['day']);
-            // $dateString = $dateCible.' '.$data['custom_metadata']['hour'];
-            // $date_visite = new \DateTime($dateString);
+            $dateCible = $this->getDateForDayOfWeek($data['custom_metadata']['day']);
+            $dateString = $dateCible;
+            $date_visite = new \DateTime($dateString);
+
+            // Log::info($data['custom_metadata']['day']);
 
             $visit = Visit::create([
                 'date_visite' => now(),
@@ -340,7 +343,7 @@ class UserController extends Controller
             // if(!$pushnotif)
             //     return response()->json(["errors" => 'Push Error', "status" => 400], 400);
 
-            
+
             // Client
             $mailer->contactMail(null, $user->email,'Réservation pour visite', $user->name.' vous venez de faire une résservation pour la visite de '.$property->label.' disponible pour '.$property->price.' '.$property->device.' le '.$visit->date_visite, 'Réservation pour visite de '.$property->label);
 

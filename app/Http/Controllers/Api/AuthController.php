@@ -16,9 +16,9 @@ class AuthController extends Controller
 {
     /**
      * Register Mobile
-     * 
+     *
      * @unauthenticated
-     * 
+     *
      * Handles the register request and return token.
      *
      */
@@ -34,13 +34,13 @@ class AuthController extends Controller
                 'password' => 'required|min:8',
                 'confirm' => 'required|min:8|same:password'
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json(["errors" => $validation->errors()], 400);
             }
 
             DB::beginTransaction();
-    
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -53,12 +53,12 @@ class AuthController extends Controller
             $mailer->activationMail($user->token, $user->email);
 
             DB::commit();
-    
+
             $data = [
                 'message' => "You've been successfully register.",
                 'user' => $user,
             ];
-    
+
             return response()->json(['data' => $data], 200);
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
@@ -70,7 +70,7 @@ class AuthController extends Controller
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function login(Request $request){
         try {
@@ -78,11 +78,11 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'password' => 'required',
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json(["errors" => $validation->errors()], 400);
             }
-    
+
             $credentials = $request->only('email', 'password');
             if (!Auth::attempt($credentials)) {
                 return response()->json([
@@ -108,14 +108,14 @@ class AuthController extends Controller
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function forget(Request $request,MailService $mailer){
         try {
             $validation = Validator::make($request->all(), [
                 'email' => 'required|email',
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json(["errors" => $validation->errors()], 400);
             }
@@ -145,7 +145,7 @@ class AuthController extends Controller
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
 
     public function validate_token(Request $request){
@@ -154,7 +154,7 @@ class AuthController extends Controller
                 'email' => 'required|email',
                 'token' => 'required',
             ]);
-    
+
             if ($validation->fails()) {
                 return response()->json(["errors" => $validation->errors()], 400);
             }
@@ -168,7 +168,7 @@ class AuthController extends Controller
                 return response()->json(["errors" => 'Invalid Token'], 400);
 
             return response()->json(["message" => 'Successful']);
-            
+
         } catch (\Exception $e) {
             return response()->json(["errors" => $e->getMessage(),"status" => 500], 500);
         }
@@ -179,12 +179,12 @@ class AuthController extends Controller
      *
      * @unauthenticated
      * @return \Illuminate\Http\Response
-     * 
+     *
      */
     public function reset(Request $request){
         try {
             $validation = Validator::make($request->all(), [
-                'email' => 'required|email|exists:users,id',
+                'email' => 'required|email|exists:users,email',
                 'password' => 'required',
                 'confirm' => 'required|same:password',
             ]);
@@ -196,7 +196,7 @@ class AuthController extends Controller
             $user = User::where('email',$request->email)->first();
 
             $user->password = Hash::make($request->password);
-            
+
             $user->save();
 
             return response()->json(["message" => 'Successful', "status" => 200]);
@@ -206,5 +206,5 @@ class AuthController extends Controller
         }
     }
 
-    
+
 }
