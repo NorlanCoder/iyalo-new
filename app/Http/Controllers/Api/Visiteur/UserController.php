@@ -176,6 +176,52 @@ class UserController extends Controller
     }
 
     /**
+     * Map Properties of User
+     *
+     * @unauthenticated
+     *
+     * @return \Illuminate\Http\Response
+     *
+     */
+    public function map_properties(Request $request){
+        try {
+
+            $validation = Validator::make($request->all(), [
+                'distance' => 'required',
+                'long' => 'required',
+                'lat' => 'required',
+            ]);
+
+            if ($validation->fails()) {
+                return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
+            }
+
+
+            $properties = Property::selectRaw('*, ( 6371 * acos( cos( radians(' . $request->lat . ') ) * cos( radians( lat ) ) * cos( radians( long ) - radians(' . $request->long . ') ) + sin( radians(' . $request->lat . ') ) * sin( radians( lat ) ) ) ) AS distance')  
+
+                    ->having('distance', '<', $request->distance)
+                    ->orderBy('created_at','desc')->paginate(10);
+
+
+            $properties->map(function ($query) {
+                $query->media = $query->media($query->id);
+                $query->user;
+                $query->note = Note::where('property_id', $query->id)->get();
+                $query->category;
+                return $query;
+            });
+
+            return response()->json([
+                'status' => 200,
+                'data' => $properties,
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json(["errors" => $e->getMessage(), "status" => 500], 500);
+        }
+    }
+
+    /**
      * List last 10 properties of User
      *
      * @unauthenticated
