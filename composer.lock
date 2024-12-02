@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d0f592ca0f2ac75b9fb966b2aae0d0a",
+    "content-hash": "0042d54565322161d49f547a136544fe",
     "packages": [
         {
             "name": "beste/clock",
@@ -485,6 +485,81 @@
                 "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.3"
             },
             "time": "2024-07-08T12:26:09+00:00"
+        },
+        {
+            "name": "dipeshsukhia/laravel-country-state-city-data",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dipeshsukhia/laravel-country-state-city-data.git",
+                "reference": "7f65a1d9867b5974269059b35092673fa25daa20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dipeshsukhia/laravel-country-state-city-data/zipball/7f65a1d9867b5974269059b35092673fa25daa20",
+                "reference": "7f65a1d9867b5974269059b35092673fa25daa20",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": ">=7.1.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0|^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DipeshSukhia\\LaravelCountryStateCityData\\LaravelCountryStateCityDataServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DipeshSukhia\\LaravelCountryStateCityData\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dipesh Sukhia",
+                    "email": "dipesh.sukhia@gmail.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Bhavin Gajjar",
+                    "email": "gajjarbhavin22@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Country State City Data Provider",
+            "homepage": "https://github.com/dipeshsukhia/laravel-country-state-city-data",
+            "keywords": [
+                "cities",
+                "city",
+                "countries",
+                "country",
+                "dipeshsukhia",
+                "laravel",
+                "laravel-country-state-city-data",
+                "state",
+                "states"
+            ],
+            "support": {
+                "issues": "https://github.com/dipeshsukhia/laravel-country-state-city-data/issues",
+                "source": "https://github.com/dipeshsukhia/laravel-country-state-city-data/tree/v2.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dipeshsukhia",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-24T11:14:02+00:00"
         },
         {
             "name": "doctrine/cache",
