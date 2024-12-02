@@ -130,7 +130,7 @@ class AuthController extends Controller
                     'token' => random_int(100000, 999999),
                 ]);
 
-                $mailer->activationMail($user->token, $user->email);
+                $mailer->passwordMail($user->token, $user->email);
             DB::commit();
 
             return response()->json(["message" => 'Email is sending']);
