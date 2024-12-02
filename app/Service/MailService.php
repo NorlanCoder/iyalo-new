@@ -18,7 +18,8 @@ class MailService{
     }
 
     public function activationMail($token, $email){
-        $message = "The activation token is : ".$token;
+        // $message = "Votre compte a été crée avec succès : ".$token;
+        $message = "Votre compte a été crée avec succès.";
         $this->mailer::send('emails.token', [
             'data' => $message
         ], function($message)use ($email){

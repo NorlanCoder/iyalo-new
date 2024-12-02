@@ -109,6 +109,7 @@ class WithdrawController extends Controller
 
             $validation = Validator::make($request->all(), [
                 'amount'  => 'required',
+                'phone' => 'required'
             ]);
 
             if ($validation->fails()) {
@@ -127,6 +128,7 @@ class WithdrawController extends Controller
             DB::beginTransaction();
             $withdraw = Withdraw::create([
                 "amount" => $request->amount,
+                "phone" => $request->phone,
                 "user_id" => auth()->user()->id,
                 'reference' => time(),
             ]);

@@ -79,6 +79,7 @@
                                         {{ $withdraw->reference }}
                                     </td>
                                     <td class="text-center">
+                                        {{ $withdraw->phone }} <br>
                                         {{ number_format($withdraw->amount) }} XOF
                                     </td>
                                     <td  class="text-center">

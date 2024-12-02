@@ -14,6 +14,7 @@ class Withdraw extends Model
         'user_id',
         'amount',
         'is_confirm',
+        'phone',
     ];
 
     public function user()

@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:push-notify')->everyFifteenSeconds();
+        $schedule->command('app:validate-visite')->everyFifteenSeconds();
     }
 
     /**
