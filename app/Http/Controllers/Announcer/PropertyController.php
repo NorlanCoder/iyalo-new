@@ -457,6 +457,13 @@ class PropertyController extends Controller
         ]);
     }
 
+    // Visit
+    /**
+     * All visits of Announcer
+     *
+     * @return \Illuminate\Http\Response
+     *
+     */
     public function all_visits(){
 
         $properties = Property::where('user_id',auth()->user()->id)->pluck('id');
