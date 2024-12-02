@@ -84,6 +84,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('announcer/property/{calendar}/update_calendar', [PropertyController::class, 'update_calendar'])->name('announcer.property.update_calendar');
         Route::delete('announcer/property/{calendar}/delete_calendar', [PropertyController::class, 'delete_calendar'])->name('announcer.property.delete_calendar');
 
+        Route::get('announcer/property/all_visits', [PropertyController::class, 'all_visits'])->name('announcer.property.all_visits');
         Route::get('announcer/property/{property}/visits', [PropertyController::class, 'visits'])->name('announcer.property.visits');
         Route::put('announcer/property/{visit}/confirm_owner', [PropertyController::class, 'confirm_owner'])->name('announcer.property.confirm_owner');
 
