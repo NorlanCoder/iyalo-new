@@ -109,6 +109,7 @@ class ProfilController extends Controller
 
         return response()->json([
             'status' => 200,
+            'data' => auth()->user(),
             'message' => 'Successfull',
         ], 200);
     }
@@ -173,6 +174,7 @@ class ProfilController extends Controller
 
         return response()->json([
             'status' => 200,
+            'data' => auth()->user(),
             'message' => 'Successfull',
         ], 200);
     }
