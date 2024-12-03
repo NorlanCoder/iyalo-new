@@ -255,7 +255,7 @@ class ProfilController extends Controller
             $user->update([
                 // 'role' => 'announcer',
                 'adress' => $request->adress,
-                'card_url' => $card_url,
+                'card_image' => $card_url,
                 'logo' => $logo_url
             ]);
             // $user->tokens()->delete();
