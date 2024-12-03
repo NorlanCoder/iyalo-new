@@ -224,8 +224,8 @@ class ProfilController extends Controller
 
         $validation = Validator::make($request->all(), [
             'adress' => 'required',
-            'card' => 'required|max:5000',
-            'logo' => 'required|max:5000'
+            'card' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:5000',
+            'logo' => 'required|mimes:jpeg,png,jpg,gif,pdf|max:5000'
         ]);
         if ($validation->fails()) {
             return response()->json([

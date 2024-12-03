@@ -32,8 +32,18 @@
             <div class="modal-body">
                 <h5>Cliquer sur valider pour éffectuer votre action</h5>
                 Adresse : {{$user->adress}} <br>
-                Logo : <br>
-                Card : <br>
+                <div class="row text-center">
+                    <div class="col-sm-6">
+                        <a href="{{ asset($user->logo) }}" class="btn bg-warning-subtle btn-lg" data-fancybox="gallery{{$user->id}}" data-caption="Logo">
+                            Logo
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a href="{{ asset($user->card_image) }}" class="btn bg-primary-subtle btn-lg" data-fancybox="gallery{{$user->id}}" data-caption="Carte">
+                            Carte
+                        </a> 
+                    </div>
+                </div>
                 <br>
                 <form action="{{ route('admin.clients.become',$user->id) }}" method="post" >
                     @csrf
