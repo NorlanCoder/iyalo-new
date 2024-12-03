@@ -167,18 +167,45 @@ class UserController extends Controller
                 return response()->json(["errors" => $validation->errors(), "status" => 400], 400);
             }
 
-            $properties = Property::where('status',true)
-                ->where(DB::raw('lower(country)'),'like',['%'.mb_strtolower($request->search).'%'])
-                ->where(DB::raw('lower(city)'),'like',['%'.mb_strtolower($request->search).'%'])
-                ->where('room','>=',$request->room ?: 0 )
-                ->where('bathroom','>=',$request->bathroom ?: 0)
-                ->where('swingpool',$request->swingpool ?: null)
-                ->whereBetween('price',[$request->min_price ?: 0,$request->max_price ?: 999999999]);
+            // Log::info($request->room);
 
-            if($request->category_id)
-                $properties = $properties->where('category_id',$request->category_id)->orderBy('created_at','desc')->paginate(10);
-            else
-                $properties = $properties->orderBy('created_at','desc')->paginate(10);
+            $search = isset($_GET['search']) ? mb_strtolower($_GET['search']) : null;
+            $room = isset($_GET['room']) ? $_GET['room'] : 0;
+            $bathroom = isset($_GET['bathroom']) ? $_GET['bathroom'] : 0;
+            $swingpool = isset($_GET['swingpool']) ? $_GET['swingpool'] : null;
+            $minPrice = isset($_GET['min_price']) ? $_GET['min_price'] : 0;
+            $maxPrice = isset($_GET['max_price']) ? $_GET['max_price'] : 999999999;
+            $categoryId = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+
+            // Start the query
+            $properties = Property::where('status', true);
+
+            // Add search filters
+            if ($search) {
+                $properties = $properties->where(function ($query) use ($search) {
+                    $query->where(DB::raw('lower(country)'), 'like', "%$search%")
+                        ->orWhere(DB::raw('lower(city)'), 'like', "%$search%")
+                        ->orWhere(DB::raw('lower(label)'), 'like', "%$search%");
+                });
+            }
+
+            // Add additional filters
+            $properties = $properties->where('room', '>=', $room)
+                                    ->where('bathroom', '>=', $bathroom);
+
+            if ($swingpool !== null) {
+                $properties = $properties->where('swingpool', $swingpool);
+            }
+
+            $properties = $properties->whereBetween('price', [$minPrice, $maxPrice]);
+
+            // Apply category filter if set
+            if ($categoryId) {
+                $properties = $properties->where('category_id', $categoryId);
+            }
+
+            // Add sorting and pagination
+            $properties = $properties->orderBy('created_at', 'desc')->paginate(10);
 
             $properties->map(function ($query) {
                 $query->media = $query->media($query->id);
