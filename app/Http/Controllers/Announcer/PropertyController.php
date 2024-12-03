@@ -15,6 +15,7 @@ use App\Models\Calendar;
 use App\Models\Notification;
 use App\Models\Property;
 use App\Models\Media;
+use Illuminate\Support\Facades\Log;
 
 class PropertyController extends Controller
 {
@@ -246,7 +247,8 @@ class PropertyController extends Controller
                 if($request->images){
                     $delete = Media::where('property_id',$property->id)->delete();
                     foreach ($request->images as $file) {
-                        if($file->isvalid()){
+                        // Log::info(gettype($file));
+                        if(gettype($file)=='object'){
                             $extension = $file->getClientOriginalName();
                             $filename = time().'-'.$extension;
                             $file->move('uploads', $filename);
